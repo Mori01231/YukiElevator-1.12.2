@@ -1,0 +1,14 @@
+name: ${project.name}
+version: ${project.version}
+main: net.azisaba.yukielevator.${project.name}
+author: YukiLeafX
+permissions:
+  yukielevator.use:
+    default: false
+    children:
+      yukielevator.up: true
+      yukielevator.down: true
+  yukielevator.up:
+    default: false
+  yukielevator.down:
+    default: false

@@ -1,0 +1,6 @@
+baseBlockType: DIAMOND_BLOCK
+baseBlockHeight: 1
+soundOnUp: { type: ENTITY_ENDERMEN_TELEPORT, category: BLOCKS, volume: 1, pitch: 1 }
+particleOnUp: { type: PORTAL, count: 50, offsetX: 1, offsetY: 1, offsetZ: 1, extra: 0.5 }
+soundOnDown: { type: ENTITY_ENDERMEN_TELEPORT, category: BLOCKS, volume: 1, pitch: 1 }
+particleOnDown: { type: PORTAL, count: 50, offsetX: 1, offsetY: 1, offsetZ: 1, extra: 0.5 }
