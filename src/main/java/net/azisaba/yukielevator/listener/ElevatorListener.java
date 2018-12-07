@@ -28,7 +28,7 @@ public class ElevatorListener implements Listener {
     private final YukiElevator plugin;
 
     private boolean isSafeBlock(Block block) {
-        return block == null || !block.getType().isSolid();
+        return block == null || !(block.getType().isSolid() || block.isLiquid());
     }
 
     private boolean isFloor(Block block) {
@@ -38,16 +38,21 @@ public class ElevatorListener implements Listener {
     }
 
     private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
+        if (player.isFlying() || player.isOnGround()) {
+            return false;
+        }
         double fromY = moveFrom.getY();
         double toY = moveTo.getY();
         double jumpSpeed = player.getVelocity().getY();
-        return !player.isFlying() && !player.isOnGround() && fromY != toY && jumpSpeed > 0;
+        return fromY != toY && jumpSpeed > 0;
     }
 
     private void playAnimation(Player player, Location to) {
         Stream.of("ENDERMAN_TELEPORT", "ENTITY_ENDERMEN_TELEPORT", "ENTITY_ENDERMAN_TELEPORT")
-                .filter(sound -> Stream.of(Sound.values()).map(Sound::toString).anyMatch(sound::equals))
-                .map(Sound::valueOf).findFirst().ifPresent(sound -> player.playSound(to, sound, 1, 1));
+                .filter(sound -> Stream.of(Sound.values()).map(Sound::toString).anyMatch(sound::equals)) //
+                .map(Sound::valueOf) //
+                .findFirst() //
+                .ifPresent(sound -> player.playSound(to, sound, 1, 1));
         player.getWorld().playEffect(to, Effect.ENDER_SIGNAL, 0);
     }
 
