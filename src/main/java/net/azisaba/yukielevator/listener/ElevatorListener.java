@@ -56,7 +56,8 @@ public class ElevatorListener implements Listener {
 
     private void teleportToFloor(Player player, Block base) {
         Location from = player.getLocation();
-        Location to = base.getRelative(BlockFace.UP).getLocation().add(0.5, 0, 0.5).setDirection(from.getDirection());
+        Vector relativeXZ = from.subtract(from.getBlock().getRelative(BlockFace.DOWN).getLocation()).toVector().setY(0);
+        Location to = base.getRelative(BlockFace.UP).getLocation().add(relativeXZ).setDirection(from.getDirection());
         player.teleport(to);
         player.playSound(to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
         player.getWorld().spawnParticle(Particle.TOTEM, to, 50, 1, 1, 1, 0.5);
