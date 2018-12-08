@@ -34,7 +34,8 @@ public class ElevatorListener implements Listener {
     }
 
     private boolean isFloor(Block base) {
-        return base.getType() == plugin.getPluginConfig().getBaseBlockType() && IntStream.range(1, plugin.getPluginConfig().getElevatorHeight()).allMatch(up -> isSafe(base.getRelative(BlockFace.UP, up)));
+        return base.getType() == plugin.getPluginConfig().getBaseBlockType() && IntStream.range(1, plugin.getPluginConfig().getElevatorHeight()) //
+                .allMatch(up -> isSafe(base.getRelative(BlockFace.UP, up)));
     }
 
     private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
@@ -46,7 +47,10 @@ public class ElevatorListener implements Listener {
         BlockIterator it = new BlockIterator(from.getLocation().setDirection(direction));
         AtomicBoolean searching = new AtomicBoolean(true);
         int size = from.getWorld().getMaxHeight();
-        return StreamSupport.stream(Spliterators.spliterator(it, size, 0), false).filter(base -> searching.compareAndSet(true, isSafe(base))).filter(this::isFloor).findFirst();
+        return StreamSupport.stream(Spliterators.spliterator(it, size, 0), false) //
+                .filter(base -> searching.compareAndSet(true, isFloor(base) || isSafe(base))) //
+                .filter(this::isFloor) //
+                .findFirst();
     }
 
     private void teleportToFloor(Player player, Block base) {
