@@ -2,12 +2,10 @@ package net.azisaba.yukielevator.listener;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -32,35 +30,16 @@ public class ElevatorListener implements Listener {
     }
 
     private boolean isFloor(Block block) {
-        if (block.getType() != plugin.getPluginConfig().getBaseBlockType()) {
-            return false;
-        }
-        return IntStream.range(1, plugin.getPluginConfig().getElevatorHeight()) //
+        return block.getType() == plugin.getPluginConfig().getBaseBlockType() && IntStream.range(1, plugin.getPluginConfig().getElevatorHeight()) //
                 .allMatch(distance -> isSafeBlock(block.getRelative(BlockFace.UP, distance)));
     }
 
     private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
-        if (player.isFlying() || player.isOnGround()) {
-            return false;
-        }
-        return moveFrom.getY() != moveTo.getY() && player.getVelocity().getY() > 0;
-    }
-
-    private void playAnimation(Player player, Location to) {
-        Stream.of("ENDERMAN_TELEPORT", "ENTITY_ENDERMEN_TELEPORT", "ENTITY_ENDERMAN_TELEPORT") //
-                .filter(sound -> Stream.of(Sound.values()).map(Sound::toString).anyMatch(sound::equals)) //
-                .map(Sound::valueOf) //
-                .findFirst() //
-                .ifPresent(sound -> player.playSound(to, sound, 1, 1));
-        player.getWorld().playEffect(to, Effect.ENDER_SIGNAL, 0);
+        return !player.isFlying() && !player.isOnGround() && moveFrom.getY() != moveTo.getY() && player.getVelocity().getY() > 0;
     }
 
     private Optional<Block> findNextFloor(Block from, BlockFace face) {
-        World world = from.getWorld();
-        Vector start = from.getLocation().getBlock().getRelative(face, plugin.getPluginConfig().getElevatorHeight()).getLocation().toVector();
-        Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
-        int maxDistance = world.getMaxHeight();
-        for (BlockIterator it = new BlockIterator(world, start, direction, 0, maxDistance); it.hasNext();) {
+        for (BlockIterator it = new BlockIterator(from.getWorld(), from.getLocation().toVector(), new Vector(face.getModX(), face.getModY(), face.getModZ()), 0, from.getWorld().getMaxHeight()); it.hasNext();) {
             Block block = it.next();
             if (isFloor(block)) {
                 return Optional.of(block);
@@ -75,7 +54,8 @@ public class ElevatorListener implements Listener {
         Location from = player.getLocation();
         Location to = block.getRelative(BlockFace.UP).getLocation().add(0.5, 0, 0.5).setDirection(from.getDirection());
         player.teleport(to);
-        playAnimation(player, to);
+        player.playSound(to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
+        player.getWorld().spawnParticle(Particle.TOTEM, to, 50, 1, 1, 1, 0.5, 0);
     }
 
     @EventHandler
