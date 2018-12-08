@@ -44,10 +44,11 @@ public class ElevatorListener implements Listener {
 
     private Optional<Block> findNextFloor(Block from, BlockFace face) {
         Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
-        BlockIterator it = new BlockIterator(from.getLocation().setDirection(direction));
+        int maxDistance = from.getWorld().getMaxHeight();
+        BlockIterator it = new BlockIterator(from.getLocation().setDirection(direction), 0, maxDistance);
         AtomicBoolean searching = new AtomicBoolean(true);
-        int size = from.getWorld().getMaxHeight();
-        return StreamSupport.stream(Spliterators.spliterator(it, size, 0), false) //
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, 0), false) //
+                .skip(1) //
                 .filter(base -> searching.compareAndSet(true, isFloor(base) || isSafe(base))) //
                 .filter(this::isFloor) //
                 .findFirst();
