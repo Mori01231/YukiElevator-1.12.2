@@ -32,10 +32,10 @@ public class ElevatorListener implements Listener {
     }
 
     private boolean isFloor(Block block) {
-        if (block.getType() != plugin.getPluginConfig().getBaseBlockType().get()) {
+        if (block.getType() != plugin.getPluginConfig().getBaseBlockType()) {
             return false;
         }
-        return IntStream.range(1, plugin.getPluginConfig().getElevatorHeight().getAsInt()) //
+        return IntStream.range(1, plugin.getPluginConfig().getElevatorHeight()) //
                 .allMatch(distance -> isSafeBlock(block.getRelative(BlockFace.UP, distance)));
     }
 
@@ -57,7 +57,7 @@ public class ElevatorListener implements Listener {
 
     private Optional<Block> findNextFloor(Block from, BlockFace face) {
         World world = from.getWorld();
-        Vector start = from.getLocation().getBlock().getRelative(face, plugin.getPluginConfig().getElevatorHeight().getAsInt()).getLocation().toVector();
+        Vector start = from.getLocation().getBlock().getRelative(face, plugin.getPluginConfig().getElevatorHeight()).getLocation().toVector();
         Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
         int maxDistance = world.getMaxHeight();
         for (BlockIterator it = new BlockIterator(world, start, direction, 0, maxDistance); it.hasNext();) {

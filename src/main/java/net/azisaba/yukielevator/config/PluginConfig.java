@@ -1,11 +1,12 @@
 package net.azisaba.yukielevator.config;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import lombok.Data;
 import lombok.Getter;
 
 import net.azisaba.yukielevator.YukiElevator;
-import net.azisaba.yukielevator.config.value.IntValue;
-import net.azisaba.yukielevator.config.value.MaterialValue;
 
 @Data
 public class PluginConfig {
@@ -13,7 +14,13 @@ public class PluginConfig {
     private final YukiElevator plugin;
 
     @Getter(lazy = true)
-    private final MaterialValue baseBlockType = new MaterialValue(plugin, plugin.getConfig(), "baseBlockType");
-    @Getter(lazy = true)
-    private final IntValue elevatorHeight = new IntValue(plugin, plugin.getConfig(), "elevatorHeight");
+    private final FileConfiguration config = plugin.getConfig();
+
+    public Material getBaseBlockType() {
+        return Material.getMaterial(getConfig().getString("baseBlockType"));
+    }
+
+    public int getElevatorHeight() {
+        return getConfig().getInt("elevatorHeight");
+    }
 }
