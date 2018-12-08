@@ -32,23 +32,22 @@ public class ElevatorListener implements Listener {
     }
 
     private boolean isFloor(Block block) {
-        return block.getType() == plugin.getPluginConfig().getBaseBlockType().get()
-                && IntStream.range(1, plugin.getPluginConfig().getElevatorHeight().getAsInt())
-                        .allMatch(distance -> isSafeBlock(block.getRelative(BlockFace.UP, distance)));
+        if (block.getType() != plugin.getPluginConfig().getBaseBlockType().get()) {
+            return false;
+        }
+        return IntStream.range(1, plugin.getPluginConfig().getElevatorHeight().getAsInt()) //
+                .allMatch(distance -> isSafeBlock(block.getRelative(BlockFace.UP, distance)));
     }
 
     private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
         if (player.isFlying() || player.isOnGround()) {
             return false;
         }
-        double fromY = moveFrom.getY();
-        double toY = moveTo.getY();
-        double jumpSpeed = player.getVelocity().getY();
-        return fromY != toY && jumpSpeed > 0;
+        return moveFrom.getY() != moveTo.getY() && player.getVelocity().getY() > 0;
     }
 
     private void playAnimation(Player player, Location to) {
-        Stream.of("ENDERMAN_TELEPORT", "ENTITY_ENDERMEN_TELEPORT", "ENTITY_ENDERMAN_TELEPORT")
+        Stream.of("ENDERMAN_TELEPORT", "ENTITY_ENDERMEN_TELEPORT", "ENTITY_ENDERMAN_TELEPORT") //
                 .filter(sound -> Stream.of(Sound.values()).map(Sound::toString).anyMatch(sound::equals)) //
                 .map(Sound::valueOf) //
                 .findFirst() //
@@ -58,8 +57,7 @@ public class ElevatorListener implements Listener {
 
     private Optional<Block> findNextFloor(Block from, BlockFace face) {
         World world = from.getWorld();
-        Vector start = from.getLocation().getBlock()
-                .getRelative(face, plugin.getPluginConfig().getElevatorHeight().getAsInt()).getLocation().toVector();
+        Vector start = from.getLocation().getBlock().getRelative(face, plugin.getPluginConfig().getElevatorHeight().getAsInt()).getLocation().toVector();
         Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
         int maxDistance = world.getMaxHeight();
         for (BlockIterator it = new BlockIterator(world, start, direction, 0, maxDistance); it.hasNext();) {
