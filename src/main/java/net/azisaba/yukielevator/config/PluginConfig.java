@@ -17,10 +17,10 @@ public class PluginConfig {
     private final FileConfiguration config = plugin.getConfig();
 
     public Material getBaseBlockType() {
-        return Material.getMaterial(getConfig().getString("baseBlockType"));
+        return Material.getMaterial(getConfig().getString("baseBlockType", "DIAMOND_BLOCK"));
     }
 
     public int getElevatorHeight() {
-        return getConfig().getInt("elevatorHeight");
+        return getConfig().getInt("elevatorHeight", 3);
     }
 }
