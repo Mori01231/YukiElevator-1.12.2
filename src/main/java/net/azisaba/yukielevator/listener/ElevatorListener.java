@@ -43,10 +43,10 @@ public class ElevatorListener implements Listener {
 
     private Optional<Block> findNextFloor(Block from, BlockFace face) {
         Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
-        int maxDistance = from.getWorld().getMaxHeight();
-        BlockIterator it = new BlockIterator(from.getWorld(), from.getLocation().toVector(), direction, 0, maxDistance);
+        BlockIterator it = new BlockIterator(from.getLocation().setDirection(direction));
         AtomicBoolean searching = new AtomicBoolean(true);
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, 0), false).filter(base -> searching.compareAndSet(true, isSafe(base))).filter(this::isFloor).findFirst();
+        int size = from.getWorld().getMaxHeight();
+        return StreamSupport.stream(Spliterators.spliterator(it, size, 0), false).filter(base -> searching.compareAndSet(true, isSafe(base))).filter(this::isFloor).findFirst();
     }
 
     private void teleportToFloor(Player player, Block base) {
