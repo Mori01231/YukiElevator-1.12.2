@@ -1,26 +1,31 @@
 package net.azisaba.yukielevator.config;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import lombok.Data;
 import lombok.Getter;
 
 import net.azisaba.yukielevator.YukiElevator;
 
-@Data
-public class PluginConfig {
+public class PluginConfig extends AbstractConfig {
 
-    private final YukiElevator plugin;
+	@Getter
+	private Material baseBlockType;
+	@Getter
+	private int elevatorHeight;
 
-    @Getter(lazy = true)
-    private final FileConfiguration config = plugin.getConfig();
+	public PluginConfig(YukiElevator plugin) {
+		super(plugin, "config.yml", "./config.yml");
+	}
 
-    public Material getBaseBlockType() {
-        return Material.getMaterial(getConfig().getString("baseBlockType", "DIAMOND_BLOCK"));
-    }
+	@Override
+	protected void loadValues() {
+		this.baseBlockType = Material.getMaterial(config.getString("baseBlockType", "DIAMOND_BLOCK"));
+		this.elevatorHeight = config.getInt("elevatorHeight", 3);
+	}
 
-    public int getElevatorHeight() {
-        return getConfig().getInt("elevatorHeight", 3);
-    }
+	@Override
+	protected void saveValues() {
+		config.set("baseBlockType", baseBlockType);
+		config.set("elevatorHeight", elevatorHeight);
+	}
 }

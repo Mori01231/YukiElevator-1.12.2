@@ -4,10 +4,10 @@ import java.util.Optional;
 import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -20,77 +20,103 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import net.azisaba.yukielevator.YukiElevator;
 
-@Data
+@RequiredArgsConstructor
 public class ElevatorListener implements Listener {
 
-    private final YukiElevator plugin;
+	private final YukiElevator plugin;
 
-    private boolean isSafe(Block block) {
-        return block.getType().isTransparent();
-    }
+	private boolean isSafe(Block block) {
+		return block.getType().isTransparent();
+	}
 
-    private boolean isFloor(Block base) {
-        return base.getType() == plugin.getPluginConfig().getBaseBlockType() && IntStream.range(1, plugin.getPluginConfig().getElevatorHeight()) //
-                .allMatch(up -> isSafe(base.getRelative(BlockFace.UP, up)));
-    }
+	private boolean isFloor(Block base) {
+		Material baseBlockType = plugin.getPluginConfig().getBaseBlockType();
+		if (base.getType() != baseBlockType) {
+			return false;
+		}
 
-    private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
-        return !player.isFlying() && !player.isOnGround() && moveFrom.getY() != moveTo.getY() && player.getVelocity().getY() > 0;
-    }
+		int elevatorHeight = plugin.getPluginConfig().getElevatorHeight();
+		return IntStream.range(1, elevatorHeight) //
+				.allMatch(up -> isSafe(base.getRelative(BlockFace.UP, up)));
+	}
 
-    private Optional<Block> findNextFloor(Block from, BlockFace face) {
-        Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
-        int maxDistance = from.getWorld().getMaxHeight();
-        BlockIterator it = new BlockIterator(from.getLocation().setDirection(direction), 0, maxDistance);
-        AtomicBoolean searching = new AtomicBoolean(true);
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, 0), false) //
-                .skip(1) //
-                .filter(base -> searching.compareAndSet(true, isFloor(base) || isSafe(base))) //
-                .filter(this::isFloor) //
-                .findFirst();
-    }
+	private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
+		if (player.isDead()) {
+			return false;
+		}
+		if (player.isOnGround() || player.isFlying()) {
+			return false;
+		}
 
-    private void teleportToFloor(Player player, Block base) {
-        Location from = player.getLocation();
-        Vector relativeXZ = from.subtract(from.getBlock().getRelative(BlockFace.DOWN).getLocation()).toVector().setY(0);
-        Location to = base.getRelative(BlockFace.UP).getLocation().add(relativeXZ).setDirection(from.getDirection());
-        player.teleport(to);
-        player.playSound(to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
-        player.getWorld().spawnParticle(Particle.TOTEM, to, 50, 1, 1, 1, 0.5);
-    }
+		return moveFrom.getY() < moveTo.getY() && player.getVelocity().getY() > 0;
+	}
 
-    @EventHandler
-    public void onElevatorUp(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        if (Stream.of("yukielevator.use", "yukielevator.up").noneMatch(player::hasPermission)) {
-            return;
-        }
+	private Optional<Block> findNextFloor(Block baseFrom, BlockFace face) {
+		Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
+		Location loc = baseFrom.getLocation().setDirection(direction);
+		int maxDistance = baseFrom.getWorld().getMaxHeight();
 
-        Block from = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (isFloor(from)) {
-            if (isPlayerJumping(player, event.getFrom(), event.getTo())) {
-                findNextFloor(from, BlockFace.UP).ifPresent(base -> teleportToFloor(player, base));
-            }
-        }
+		BlockIterator it = new BlockIterator(loc, 0, maxDistance);
 
-    }
+		int elevatorHeight = plugin.getPluginConfig().getElevatorHeight();
+		AtomicBoolean searching = new AtomicBoolean(true);
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(it, 0), false) //
+				.skip(elevatorHeight) //
+				.filter(baseTo -> searching.compareAndSet(true, isFloor(baseTo) || isSafe(baseTo))) //
+				.filter(this::isFloor) //
+				.findFirst();
+	}
 
-    @EventHandler
-    public void onElevatorDown(PlayerToggleSneakEvent event) {
-        Player player = event.getPlayer();
-        if (Stream.of("yukielevator.use", "yukielevator.down").noneMatch(player::hasPermission)) {
-            return;
-        }
+	private void teleportToFloor(Player player, Block baseFrom, Block baseTo) {
+		Location from = player.getLocation();
+		Location to = baseTo.getRelative(BlockFace.UP).getLocation();
 
-        Block from = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (isFloor(from)) {
-            if (event.isSneaking()) {
-                findNextFloor(from, BlockFace.DOWN).ifPresent(base -> teleportToFloor(player, base));
-            }
-        }
-    }
+		Vector relativeXZ = from.subtract(baseFrom.getLocation()).toVector().setY(0);
+		to.add(relativeXZ);
+
+		Vector direction = from.getDirection();
+		to.setDirection(direction);
+
+		player.teleport(to);
+		player.playSound(to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
+		player.getWorld().spawnParticle(Particle.TOTEM, to, 50, 1, 1, 1, 0.5);
+	}
+
+	@EventHandler
+	public void onElevatorUp(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (!(player.hasPermission("yukielevator.use") || player.hasPermission("yukielevator.up"))) {
+			return;
+		}
+
+		Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+		if (!isFloor(baseFrom)) {
+			return;
+		}
+		if (isPlayerJumping(player, event.getFrom(), event.getTo())) {
+			findNextFloor(baseFrom, BlockFace.UP) //
+					.ifPresent(baseTo -> teleportToFloor(player, baseFrom, baseTo));
+		}
+	}
+
+	@EventHandler
+	public void onElevatorDown(PlayerToggleSneakEvent event) {
+		Player player = event.getPlayer();
+		if (!(player.hasPermission("yukielevator.use") || player.hasPermission("yukielevator.down"))) {
+			return;
+		}
+
+		Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+		if (!isFloor(baseFrom)) {
+			return;
+		}
+		if (event.isSneaking()) {
+			findNextFloor(baseFrom, BlockFace.DOWN) //
+					.ifPresent(baseTo -> teleportToFloor(player, baseFrom, baseTo));
+		}
+	}
 }
