@@ -3,14 +3,17 @@ package net.azisaba.yukielevator.config;
 import org.bukkit.Material;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import net.azisaba.yukielevator.YukiElevator;
 
 public class PluginConfig extends Config {
 
 	@Getter
+	@Setter
 	private Material baseBlockType;
 	@Getter
+	@Setter
 	private int elevatorHeight;
 
 	public PluginConfig(YukiElevator plugin) {
@@ -25,7 +28,7 @@ public class PluginConfig extends Config {
 
 	@Override
 	protected void saveValues() {
-		config.set("baseBlockType", baseBlockType);
+		config.set("baseBlockType", baseBlockType.toString());
 		config.set("elevatorHeight", elevatorHeight);
 	}
 }

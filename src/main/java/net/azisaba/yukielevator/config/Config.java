@@ -54,6 +54,7 @@ public class Config {
 	}
 
 	public void reloadConfig() {
+		saveConfig();
 		this.config = null;
 		loadConfig();
 	}

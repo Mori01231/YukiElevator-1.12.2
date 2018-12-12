@@ -2,13 +2,21 @@ name: ${project.name}
 version: ${project.version}
 main: net.azisaba.yukielevator.${project.name}
 author: YukiLeafX
+
 permissions:
   yukielevator.use:
-    default: false
+    default: true
     children:
       yukielevator.up: true
       yukielevator.down: true
   yukielevator.up:
-    default: false
+    default: true
   yukielevator.down:
-    default: false
+    default: true
+  yukielevator.command.yukielevator:
+    default: op
+
+commands:
+  yukielevator:
+    aliases: [ye]
+    permission: yukielevator.command.yukielevator
