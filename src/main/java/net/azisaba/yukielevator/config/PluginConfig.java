@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import net.azisaba.yukielevator.YukiElevator;
 
-public class PluginConfig extends AbstractConfig {
+public class PluginConfig extends Config {
 
 	@Getter
 	private Material baseBlockType;

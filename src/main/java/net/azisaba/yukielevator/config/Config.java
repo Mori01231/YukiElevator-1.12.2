@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class AbstractConfig {
+public class Config {
 
 	private final Plugin plugin;
 	private final String resourcePath;
@@ -70,7 +70,9 @@ public abstract class AbstractConfig {
 		}
 	}
 
-	protected abstract void loadValues();
+	protected void loadValues() {
+	}
 
-	protected abstract void saveValues();
+	protected void saveValues() {
+	}
 }
