@@ -10,20 +10,20 @@ import net.azisaba.yukielevator.listener.ElevatorListener;
 
 public class YukiElevator extends JavaPlugin {
 
-	@Getter
-	private final PluginConfig pluginConfig = new PluginConfig(this);
+    @Getter
+    private final PluginConfig pluginConfig = new PluginConfig( this );
 
-	@Override
-	public void onEnable() {
-		pluginConfig.loadConfig();
+    @Override
+    public void onEnable() {
+        pluginConfig.loadConfig();
 
-		getCommand("yukielevator").setExecutor(new YukiElevatorCommand(this));
-		getCommand("yukielevator").setTabCompleter(new YukiElevatorCommand(this));
-		getServer().getPluginManager().registerEvents(new ElevatorListener(this), this);
-	}
+        getCommand( "yukielevator" ).setExecutor( new YukiElevatorCommand( this ) );
+        getCommand( "yukielevator" ).setTabCompleter( new YukiElevatorCommand( this ) );
+        getServer().getPluginManager().registerEvents( new ElevatorListener( this ), this );
+    }
 
-	@Override
-	public void onDisable() {
-		pluginConfig.saveConfig();
-	}
+    @Override
+    public void onDisable() {
+        pluginConfig.saveConfig();
+    }
 }
