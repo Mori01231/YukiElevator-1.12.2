@@ -15,12 +15,14 @@
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <github.global.server>github</github.global.server>
+    <github.mvnRepo.username>YukiLeafX</github.mvnRepo.username>
+    <github.mvnRepo.name>mvn-repo</github.mvnRepo.name>
   </properties>
 
   <distributionManagement>
     <repository>
       <id>internal.repos</id>
-      <url>file://${project.build.directory}/mvn-repo</url>
+      <url>file://${project.build.directory}/${github.mvnRepo.name}</url>
     </repository>
   </distributionManagement>
 
@@ -47,13 +49,13 @@
         <version>0.12</version>
         <configuration>
           <message>${project.name} v${project.version} が公開されました^q^</message>
-          <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+          <outputDirectory>${project.build.directory}/${github.mvnRepo.name}</outputDirectory>
           <branch>refs/heads/master</branch>
           <includes>
             <include>**/*</include>
           </includes>
-          <repositoryName>mvn-repo</repositoryName>
-          <repositoryOwner>YukiLeafX</repositoryOwner>
+          <repositoryName>${github.mvnRepo.name}</repositoryName>
+          <repositoryOwner>${github.mvnRepo.username}</repositoryOwner>
           <merge>true</merge>
         </configuration>
         <executions>
@@ -88,7 +90,7 @@
     </repository>
     <repository>
       <id>yuki-repo</id>
-      <url>https://raw.githubusercontent.com/YukiLeafX/mvn-repo/master/</url>
+      <url>https://raw.githubusercontent.com/${github.mvnRepo.username}/${github.mvnRepo.name}/master/</url>
     </repository>
   </repositories>
 
