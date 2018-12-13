@@ -10,7 +10,7 @@ import net.azisaba.yukielevator.YukiElevator;
 import io.github.yukileafx.yukiconfig.bukkit.BukkitYamlConfig;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class PluginConfig extends BukkitYamlConfig {
 
     private Material baseBlockType;
