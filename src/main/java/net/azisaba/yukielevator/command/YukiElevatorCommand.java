@@ -47,16 +47,10 @@ public class YukiElevatorCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args ) {
         if ( args.length == 1 ) {
-            return Stream.of( "reload", "settype" )
-                    .filter( str -> str.startsWith( args[0] ) )
-                    .collect( Collectors.toList() );
+            return Stream.of( "reload", "settype" ).filter( str -> str.startsWith( args[0] ) ).collect( Collectors.toList() );
         }
         if ( args.length == 2 && args[0].equalsIgnoreCase( "settype" ) ) {
-            return Stream.of( Material.values() )
-                    .filter( Material::isBlock )
-                    .map( Material::toString )
-                    .filter( str -> str.startsWith( args[1] ) )
-                    .collect( Collectors.toList() );
+            return Stream.of( Material.values() ).filter( Material::isBlock ).map( Material::toString ).filter( str -> str.startsWith( args[1] ) ).collect( Collectors.toList() );
         }
         return null;
     }

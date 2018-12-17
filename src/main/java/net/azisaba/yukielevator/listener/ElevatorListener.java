@@ -1,10 +1,7 @@
 package net.azisaba.yukielevator.listener;
 
 import java.util.Optional;
-import java.util.Spliterators;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -62,12 +59,19 @@ public class ElevatorListener implements Listener {
         BlockIterator it = new BlockIterator( loc, 0, maxDistance );
 
         int elevatorHeight = plugin.getPluginConfig().getElevatorHeight();
-        AtomicBoolean searching = new AtomicBoolean( true );
-        return StreamSupport.stream( Spliterators.spliteratorUnknownSize( it, 0 ), false )
-                .skip( elevatorHeight )
-                .filter( baseTo -> searching.compareAndSet( true, isFloor( baseTo ) || isSafe( baseTo ) ) )
-                .filter( this::isFloor )
-                .findFirst();
+        IntStream.range( 0, elevatorHeight ).forEach( i -> it.next() );
+
+        while ( it.hasNext() ) {
+            Block baseTo = it.next();
+
+            if ( isFloor( baseTo ) ) {
+                return Optional.of( baseTo );
+            } else if ( !isSafe( baseTo ) ) {
+                break;
+            }
+        }
+
+        return Optional.empty();
     }
 
     private void teleportToFloor( Player player, Block baseFrom, Block baseTo ) {
@@ -113,8 +117,7 @@ public class ElevatorListener implements Listener {
             return;
         }
         if ( event.isSneaking() ) {
-            findNextFloor( baseFrom, BlockFace.DOWN )
-                    .ifPresent( baseTo -> teleportToFloor( player, baseFrom, baseTo ) );
+            findNextFloor( baseFrom, BlockFace.DOWN ).ifPresent( baseTo -> teleportToFloor( player, baseFrom, baseTo ) );
         }
     }
 }
