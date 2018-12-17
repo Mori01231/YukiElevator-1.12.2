@@ -22,13 +22,13 @@ public class PluginConfig extends BukkitYamlConfig {
 
     @Override
     protected void loadValues() {
-        this.baseBlockType = Material.getMaterial( getConfig().getString( "baseBlockType", "DIAMOND_BLOCK" ) );
-        this.elevatorHeight = getConfig().getInt( "elevatorHeight", 3 );
+        this.baseBlockType = Material.getMaterial( config.getString( "baseBlockType", "DIAMOND_BLOCK" ) );
+        this.elevatorHeight = config.getInt( "elevatorHeight", 3 );
     }
 
     @Override
     protected void saveValues() {
-        getConfig().set( "baseBlockType", baseBlockType.toString() );
-        getConfig().set( "elevatorHeight", elevatorHeight );
+        config.set( "baseBlockType", baseBlockType.toString() );
+        config.set( "elevatorHeight", elevatorHeight );
     }
 }
