@@ -28,7 +28,7 @@ public class YukiElevatorCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if ( args.length >= 2 && args[0].equalsIgnoreCase( "settype" ) ) {
+        if ( args.length >= 2 && args[0].equalsIgnoreCase( "setType" ) ) {
             Material type = Material.getMaterial( args[1] );
             if ( type == null ) {
                 sender.sendMessage( ChatColor.RED + args[1] + " は無効なブロックの種類です。" );
@@ -40,16 +40,16 @@ public class YukiElevatorCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage( ChatColor.RED + "使用法: /" + label + " reload OR /" + label + " settype <ブロックの種類>" );
+        sender.sendMessage( ChatColor.RED + "使用法: /" + label + " reload OR /" + label + " setType <ブロックの種類>" );
         return false;
     }
 
     @Override
     public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args ) {
         if ( args.length == 1 ) {
-            return Stream.of( "reload", "settype" ).filter( str -> str.startsWith( args[0] ) ).collect( Collectors.toList() );
+            return Stream.of( "reload", "setType" ).filter( str -> str.startsWith( args[0] ) ).collect( Collectors.toList() );
         }
-        if ( args.length == 2 && args[0].equalsIgnoreCase( "settype" ) ) {
+        if ( args.length == 2 && args[0].equalsIgnoreCase( "setType" ) ) {
             return Stream.of( Material.values() ).filter( Material::isBlock ).map( Material::toString ).filter( str -> str.startsWith( args[1] ) ).collect( Collectors.toList() );
         }
         return null;
