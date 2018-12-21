@@ -13,10 +13,3 @@ permissions:
     default: true
   yukielevator.down:
     default: true
-  yukielevator.command.yukielevator:
-    default: op
-
-commands:
-  yukielevator:
-    aliases: [ye]
-    permission: yukielevator.command.yukielevator
