@@ -24,6 +24,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
+import me.rayzr522.jsonmessage.JSONMessage;
+
 public class YukiElevator extends JavaPlugin implements Listener {
 
     public static final Material BASE_BLOCK_TYPE = Material.DIAMOND_BLOCK;
@@ -41,7 +43,7 @@ public class YukiElevator extends JavaPlugin implements Listener {
         return base.getType() == BASE_BLOCK_TYPE && IntStream.range( 1, ELEVATOR_HEIGHT ).mapToObj( i -> base.getRelative( BlockFace.UP, i ) ).allMatch( this::isSafe );
     }
 
-    public Optional<Block> findNextFloor( Block baseFrom, BlockFace face ) {
+    public Optional<Block> tryFindFloor( Block baseFrom, BlockFace face ) {
         Vector direction = new Vector( face.getModX(), face.getModY(), face.getModZ() );
         Location loc = baseFrom.getLocation().setDirection( direction );
         int maxDistance = baseFrom.getWorld().getMaxHeight();
@@ -51,14 +53,15 @@ public class YukiElevator extends JavaPlugin implements Listener {
 
         List<Block> list = Lists.newArrayList( it );
         int limit = Iterables.indexOf( list, Predicates.and( Predicates.not( this::isFloor ), Predicates.not( this::isSafe ) ) );
-        return Iterables.tryFind( Iterables.limit( list, limit == -1 ? list.size() : limit ), this::isFloor ).toJavaUtil();
+
+        return Iterables.tryFind( Iterables.limit( list, limit == -1 ? maxDistance : limit ), this::isFloor ).toJavaUtil();
     }
 
     public void teleportToFloor( Player player, Block baseFrom, Block baseTo ) {
         Location from = player.getLocation();
         Location to = baseTo.getRelative( BlockFace.UP ).getLocation();
 
-        Vector relativeXZ = from.subtract( baseFrom.getLocation() ).toVector().setY( 0 );
+        Vector relativeXZ = from.clone().subtract( baseFrom.getLocation() ).toVector().setY( 0 );
         to.add( relativeXZ );
 
         Vector direction = from.getDirection();
@@ -67,36 +70,52 @@ public class YukiElevator extends JavaPlugin implements Listener {
         player.teleport( to );
         player.playSound( to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1 );
         player.getWorld().spawnParticle( Particle.TOTEM, to, 50, 0.2, 0.2, 0.2, 0.5 );
+
+        JSONMessage.actionbar( "&a次の階へ移動しました。", player );
     }
 
     @EventHandler
     public void onElevatorUp( PlayerMoveEvent event ) {
         Player player = event.getPlayer();
-        if ( !player.hasPermission( "yukielevator.use" ) && !player.hasPermission( "yukielevator.up" ) ) {
+
+        Block baseFrom = player.getLocation().getBlock().getRelative( BlockFace.DOWN );
+        if ( !isFloor( baseFrom ) ) {
+            return;
+        }
+        if ( !isPlayerJumping( player, event.getFrom(), event.getTo() ) ) {
             return;
         }
 
-        Block baseFrom = player.getLocation().getBlock().getRelative( BlockFace.DOWN );
-        if ( isFloor( baseFrom ) ) {
-            if ( isPlayerJumping( player, event.getFrom(), event.getTo() ) ) {
-                findNextFloor( baseFrom, BlockFace.UP ).ifPresent( baseTo -> teleportToFloor( player, baseFrom, baseTo ) );
+        tryFindFloor( baseFrom, BlockFace.UP ).ifPresent( baseTo -> {
+            if ( !player.hasPermission( "yukielevator.use" ) && !player.hasPermission( "yukielevator.up" ) ) {
+                JSONMessage.actionbar( "&cあなたはエレベーターを上る権限を持っていません！", player );
+                return;
             }
-        }
+
+            teleportToFloor( player, baseFrom, baseTo );
+        } );
     }
 
     @EventHandler
     public void onElevatorDown( PlayerToggleSneakEvent event ) {
         Player player = event.getPlayer();
-        if ( !player.hasPermission( "yukielevator.use" ) && !player.hasPermission( "yukielevator.down" ) ) {
+
+        Block baseFrom = player.getLocation().getBlock().getRelative( BlockFace.DOWN );
+        if ( !isFloor( baseFrom ) ) {
+            return;
+        }
+        if ( !event.isSneaking() ) {
             return;
         }
 
-        Block baseFrom = player.getLocation().getBlock().getRelative( BlockFace.DOWN );
-        if ( isFloor( baseFrom ) ) {
-            if ( event.isSneaking() ) {
-                findNextFloor( baseFrom, BlockFace.DOWN ).ifPresent( baseTo -> teleportToFloor( player, baseFrom, baseTo ) );
+        tryFindFloor( baseFrom, BlockFace.DOWN ).ifPresent( baseTo -> {
+            if ( !player.hasPermission( "yukielevator.use" ) && !player.hasPermission( "yukielevator.down" ) ) {
+                JSONMessage.actionbar( "&cあなたはエレベーターを下る権限を持っていません！", player );
+                return;
             }
-        }
+
+            teleportToFloor( player, baseFrom, baseTo );
+        } );
     }
 
     @Override
