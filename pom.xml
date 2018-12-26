@@ -14,6 +14,9 @@
   <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <github.global.server>github</github.global.server>
+    <github.mvnRepo.username>YukiLeafX</github.mvnRepo.username>
+    <github.mvnRepo.name>mvn-repo</github.mvnRepo.name>
   </properties>
 
   <build>
@@ -46,8 +49,39 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.12</version>
+        <configuration>
+          <message>${project.name} v${project.version} が公開されました^q^</message>
+          <outputDirectory>${project.build.directory}/${github.mvnRepo.name}</outputDirectory>
+          <branch>refs/heads/master</branch>
+          <includes>
+            <include>**/*</include>
+          </includes>
+          <repositoryName>${github.mvnRepo.name}</repositoryName>
+          <repositoryOwner>${github.mvnRepo.username}</repositoryOwner>
+          <merge>true</merge>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>internal-repo</id>
+      <url>file://${project.build.directory}/${github.mvnRepo.name}</url>
+    </repository>
+  </distributionManagement>
 
   <repositories>
     <repository>
