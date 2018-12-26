@@ -1,4 +1,4 @@
-package net.azisaba.yukielevator;
+package net.azisaba.yukielevator.util;
 
 import java.util.List;
 import java.util.Optional;

@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.azisaba.yukielevator.config.PluginConfig;
 import net.azisaba.yukielevator.listener.ElevatorDownListener;
 import net.azisaba.yukielevator.listener.ElevatorUpListener;
+import net.azisaba.yukielevator.util.ElevatorSystem;
 
 public class YukiElevator extends JavaPlugin {
 
