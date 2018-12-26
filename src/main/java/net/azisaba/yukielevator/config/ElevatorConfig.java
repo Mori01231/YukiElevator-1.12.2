@@ -11,14 +11,14 @@ import io.github.yukileafx.yukiconfig.ReadableConfig;
 import io.github.yukileafx.yukiconfig.YukiConfig;
 import io.github.yukileafx.yukiconfig.loader.BukkitLoader;
 
-public class PluginConfig extends YukiConfig<BukkitLoader> implements ReadableConfig {
+public class ElevatorConfig extends YukiConfig<BukkitLoader> implements ReadableConfig {
 
     @Getter
     private Material baseBlockType;
     @Getter
     private int elevatorHeight;
 
-    public PluginConfig( YukiElevator plugin ) {
+    public ElevatorConfig( YukiElevator plugin ) {
         super( new BukkitLoader(), FileLink.of( plugin.getClass(), plugin.getDataFolder(), "elevator.yml" ) );
     }
 
