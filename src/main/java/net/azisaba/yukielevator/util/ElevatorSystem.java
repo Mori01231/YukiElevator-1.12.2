@@ -66,7 +66,7 @@ public class ElevatorSystem {
         player.playSound( to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1 );
         player.getWorld().spawnParticle( Particle.TOTEM, to, 50, 0.2, 0.2, 0.2, 0.5 );
 
-        JSONMessage.create().then( "次の階へ移動しました。" ).color( ChatColor.GREEN ).title( 0, 120, 0, player );
-        JSONMessage.create().then( "距離: " ).color( ChatColor.BLUE ).then( Integer.toString( (int) from.distance( to ) ) ).color( ChatColor.WHITE ).then( " ブロック" ).color( ChatColor.BLUE ).subtitle( player );
+        JSONMessage.create( ChatColor.GREEN + "次の階へ移動しました。" ).tooltip( JSONMessage.create( "移動元: " + from.toVector().toBlockVector().toString().replace( ",", ", " ) + "\n移動先: " + to.toVector().toBlockVector().toString().replace( ",", ", " ) + "\n距離: " + (int) from.distance( to ) + " ブロック" ) ).send( player );
+        ;
     }
 }

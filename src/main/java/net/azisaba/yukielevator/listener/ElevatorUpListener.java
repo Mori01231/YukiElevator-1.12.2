@@ -1,5 +1,6 @@
 package net.azisaba.yukielevator.listener;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,6 +12,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import lombok.RequiredArgsConstructor;
 
 import net.azisaba.yukielevator.YukiElevator;
+
+import me.rayzr522.jsonmessage.JSONMessage;
 
 @RequiredArgsConstructor
 public class ElevatorUpListener implements Listener {
@@ -35,7 +38,7 @@ public class ElevatorUpListener implements Listener {
 
         plugin.getSystem().tryFindFloor( baseFrom, BlockFace.UP ).ifPresent( baseTo -> {
             if ( !player.hasPermission( "yukielevator.use" ) && !player.hasPermission( "yukielevator.up" ) ) {
-                player.sendMessage( "&cあなたはエレベーターを上る権限を持っていません！" );
+                JSONMessage.create( ChatColor.RED + "あなたはエレベーターを上る権限を持っていません！" ).tooltip( "yukielevator.use または yukielevator.up のどちらかの権限が必要です。" ).send( player );
                 return;
             }
 
