@@ -1,2 +1,4 @@
-baseBlockType: DIAMOND_BLOCK
-elevatorHeight: 3
+settings:
+  ==: net.azisaba.yukielevator.config.ElevatorConfig
+  baseBlockType: DIAMOND_BLOCK
+  elevatorHeight: 3

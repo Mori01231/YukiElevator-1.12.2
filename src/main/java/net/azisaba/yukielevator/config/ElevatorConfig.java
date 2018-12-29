@@ -6,7 +6,6 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.configuration.serialization.ConfigurationSerializable;
-import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -40,6 +39,6 @@ public class ElevatorConfig implements ConfigurationSerializable {
             file.createNewFile( true );
         }
         file.load();
-        return (ElevatorConfig) ConfigurationSerialization.deserializeObject( file.getValues( false ), ElevatorConfig.class );
+        return (ElevatorConfig) file.get( "settings" );
     }
 }
