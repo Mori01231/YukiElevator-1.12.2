@@ -1,50 +1,37 @@
 package net.azisaba.yukielevator.config;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.SneakyThrows;
 
-public class ElevatorConfig implements ConfigurationSerializable {
+import net.azisaba.yukielevator.config.obj.Settings;
 
-    @Getter
-    private Material baseBlockType;
-    @Getter
-    private int elevatorHeight;
+@Data
+public class ElevatorConfig {
 
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> mappedObject = new LinkedHashMap<>();
-        mappedObject.put( "baseBlockType", baseBlockType );
-        mappedObject.put( "elevatorHeight", elevatorHeight );
-        return mappedObject;
-    }
+    private final InputStream resource;
+    private final Path file;
 
-    public static ElevatorConfig deserialize( Map<String, Object> mappedObject ) {
-        ElevatorConfig object = new ElevatorConfig();
-        object.baseBlockType = Material.getMaterial( (String) mappedObject.get( "baseBlockType" ) );
-        object.elevatorHeight = (int) mappedObject.get( "elevatorHeight" );
-        return object;
-    }
+    private YamlConfiguration config;
 
-    @SneakyThrows
-    public static ElevatorConfig load( InputStream resource, Path file ) {
-        ConfigurationSerialization.registerClass( ElevatorConfig.class );
+    private Settings settings;
 
+    @SneakyThrows( { IOException.class } )
+    public void saveDefaultConfig() {
         if ( !Files.isRegularFile( file ) ) {
             Files.createDirectories( file.getParent() );
             Files.copy( resource, file );
         }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration( file.toFile() );
-        return (ElevatorConfig) config.get( "settings" );
+    }
+
+    public void loadConfig() {
+        this.config = YamlConfiguration.loadConfiguration( file.toFile() );
+        this.settings = (Settings) config.get( "settings" );
     }
 }
