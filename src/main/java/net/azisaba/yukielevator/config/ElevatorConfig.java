@@ -39,6 +39,9 @@ public class ElevatorConfig implements ConfigurationSerializable {
         ConfigurationSerialization.registerClass( ElevatorConfig.class );
 
         YamlFile yamlFile = new YamlFile( file );
+        if ( !yamlFile.exists() ) {
+            yamlFile.createNewFile( true );
+        }
         yamlFile.load();
         return (ElevatorConfig) yamlFile.get( "settings" );
     }
