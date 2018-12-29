@@ -61,10 +61,6 @@
       <id>rayzr-repo</id>
       <url>https://cdn.rawgit.com/Rayzr522/maven-repo/master/</url>
     </repository>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
   </repositories>
 
   <dependencies>
@@ -84,11 +80,6 @@
       <groupId>me.rayzr522</groupId>
       <artifactId>jsonmessage</artifactId>
       <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.Carleslc</groupId>
-      <artifactId>Simple-YAML</artifactId>
-      <version>1.3</version>
     </dependency>
   </dependencies>
 </project>

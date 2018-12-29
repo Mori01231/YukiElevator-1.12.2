@@ -1,13 +1,15 @@
 package net.azisaba.yukielevator.config;
 
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.Material;
-import org.simpleyaml.configuration.file.YamlFile;
-import org.simpleyaml.configuration.serialization.ConfigurationSerializable;
-import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -35,14 +37,13 @@ public class ElevatorConfig implements ConfigurationSerializable {
     }
 
     @SneakyThrows
-    public static ElevatorConfig load( File file ) {
+    public static ElevatorConfig load( InputStream resource, File file ) {
         ConfigurationSerialization.registerClass( ElevatorConfig.class );
 
-        YamlFile yamlFile = new YamlFile( file );
-        if ( !yamlFile.exists() ) {
-            yamlFile.createNewFile( true );
+        if ( !file.exists() ) {
+            Files.copy( resource, file.toPath() );
         }
-        yamlFile.load();
-        return (ElevatorConfig) yamlFile.get( "settings" );
+        YamlConfiguration config = YamlConfiguration.loadConfiguration( file );
+        return (ElevatorConfig) config.get( "settings" );
     }
 }
