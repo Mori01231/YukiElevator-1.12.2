@@ -1,11 +1,13 @@
 package net.azisaba.yukielevator.config;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.Material;
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.configuration.serialization.ConfigurationSerializable;
+import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -33,12 +35,11 @@ public class ElevatorConfig implements ConfigurationSerializable {
     }
 
     @SneakyThrows
-    public static ElevatorConfig load() {
-        YamlFile file = new YamlFile( "elevator.yml" );
-        if ( !file.exists() ) {
-            file.createNewFile( true );
-        }
-        file.load();
-        return (ElevatorConfig) file.get( "settings" );
+    public static ElevatorConfig load( File file ) {
+        ConfigurationSerialization.registerClass( ElevatorConfig.class );
+
+        YamlFile yamlFile = new YamlFile( file );
+        yamlFile.load();
+        return (ElevatorConfig) yamlFile.get( "settings" );
     }
 }
