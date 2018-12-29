@@ -12,18 +12,12 @@ import net.azisaba.yukielevator.util.ElevatorSystem;
 public class YukiElevator extends JavaPlugin {
 
     @Getter
-    private ElevatorConfig elevatorConfig;
+    private final ElevatorConfig elevatorConfig = ElevatorConfig.load();
     @Getter
-    private ElevatorSystem system;
+    private final ElevatorSystem system = new ElevatorSystem( elevatorConfig.getBaseBlockType(), elevatorConfig.getElevatorHeight() );
 
     @Override
     public void onEnable() {
-        this.elevatorConfig = new ElevatorConfig( this );
-        elevatorConfig.saveDefaultConfig();
-        elevatorConfig.loadConfig();
-
-        this.system = new ElevatorSystem( elevatorConfig.getBaseBlockType(), elevatorConfig.getElevatorHeight() );
-
         getServer().getPluginManager().registerEvents( new ElevatorUpListener( this ), this );
         getServer().getPluginManager().registerEvents( new ElevatorDownListener( this ), this );
     }

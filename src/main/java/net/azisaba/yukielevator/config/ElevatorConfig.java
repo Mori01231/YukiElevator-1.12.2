@@ -1,30 +1,47 @@
 package net.azisaba.yukielevator.config;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
+import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.configuration.serialization.ConfigurationSerializable;
+import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 
-import net.azisaba.yukielevator.YukiElevator;
-
-import io.github.yukileafx.yukiconfig.FileLink;
-import io.github.yukileafx.yukiconfig.ReadableConfig;
-import io.github.yukileafx.yukiconfig.YukiConfig;
-import io.github.yukileafx.yukiconfig.loader.BukkitLoader;
-
-public class ElevatorConfig extends YukiConfig<BukkitLoader> implements ReadableConfig {
+public class ElevatorConfig implements ConfigurationSerializable {
 
     @Getter
     private Material baseBlockType;
     @Getter
     private int elevatorHeight;
 
-    public ElevatorConfig( YukiElevator plugin ) {
-        super( new BukkitLoader(), FileLink.of( plugin.getClass(), plugin.getDataFolder(), "elevator.yml" ) );
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> mappedObject = new LinkedHashMap<>();
+        mappedObject.put( "baseBlockType", baseBlockType );
+        mappedObject.put( "elevatorHeight", elevatorHeight );
+        return mappedObject;
     }
 
-    @Override
-    public void onLoad() {
-        this.baseBlockType = Material.getMaterial( getLoader().getConfig().getString( "baseBlockType", "DIAMOND_BLOCK" ) );
-        this.elevatorHeight = getLoader().getConfig().getInt( "elevatorHeight", 3 );
+    public static ElevatorConfig deserialize( Map<String, Object> mappedObject ) {
+        ElevatorConfig object = new ElevatorConfig();
+        object.baseBlockType = Material.getMaterial( (String) mappedObject.get( "baseBlockType" ) );
+        object.elevatorHeight = (int) mappedObject.get( "elevatorHeight" );
+        return object;
+    }
+
+    @SneakyThrows
+    public static ElevatorConfig load() {
+        ConfigurationSerialization.registerClass( ElevatorConfig.class );
+
+        YamlFile file = new YamlFile( "elevator.yml" );
+        if ( !file.exists() ) {
+            file.createNewFile( true );
+        }
+        file.load();
+        return (ElevatorConfig) file.get( "" );
     }
 }

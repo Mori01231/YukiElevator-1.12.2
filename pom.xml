@@ -7,7 +7,7 @@
 
   <groupId>net.azisaba</groupId>
   <artifactId>YukiElevator</artifactId>
-  <version>3.6.1</version>
+  <version>3.6.2</version>
 
   <name>${project.artifactId}</name>
 
@@ -37,6 +37,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.1</version>
+        <configuration>
+          <minimizeJar>true</minimizeJar>
+        </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -59,8 +62,8 @@
       <url>https://cdn.rawgit.com/Rayzr522/maven-repo/master/</url>
     </repository>
     <repository>
-      <id>yuki-repo</id>
-      <url>https://raw.githubusercontent.com/YukiLeafX/mvn-repo/master/</url>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
     </repository>
   </repositories>
 
@@ -83,9 +86,9 @@
       <version>1.0.0</version>
     </dependency>
     <dependency>
-      <groupId>io.github.yukileafx</groupId>
-      <artifactId>YukiConfig</artifactId>
-      <version>1.3.1</version>
+      <groupId>com.github.Carleslc</groupId>
+      <artifactId>Simple-YAML</artifactId>
+      <version>1.3</version>
     </dependency>
   </dependencies>
 </project>
