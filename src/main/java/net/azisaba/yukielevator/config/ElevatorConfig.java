@@ -35,13 +35,11 @@ public class ElevatorConfig implements ConfigurationSerializable {
 
     @SneakyThrows
     public static ElevatorConfig load() {
-        ConfigurationSerialization.registerClass( ElevatorConfig.class );
-
         YamlFile file = new YamlFile( "elevator.yml" );
         if ( !file.exists() ) {
             file.createNewFile( true );
         }
         file.load();
-        return (ElevatorConfig) file.get( "" );
+        return (ElevatorConfig) ConfigurationSerialization.deserializeObject( file.getValues( false ), ElevatorConfig.class );
     }
 }
