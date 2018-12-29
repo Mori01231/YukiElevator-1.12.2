@@ -41,6 +41,7 @@ public class ElevatorConfig implements ConfigurationSerializable {
         ConfigurationSerialization.registerClass( ElevatorConfig.class );
 
         if ( !file.exists() ) {
+            Files.createDirectories( file.toPath().getParent() );
             Files.copy( resource, file.toPath() );
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration( file );
