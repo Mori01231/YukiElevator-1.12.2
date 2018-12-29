@@ -1,7 +1,5 @@
 package net.azisaba.yukielevator;
 
-import java.io.File;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
@@ -14,7 +12,7 @@ import net.azisaba.yukielevator.util.ElevatorSystem;
 public class YukiElevator extends JavaPlugin {
 
     @Getter
-    private final ElevatorConfig elevatorConfig = ElevatorConfig.load( getResource( "elevator.yml" ), new File( getDataFolder(), "elevator.yml" ) );
+    private final ElevatorConfig elevatorConfig = ElevatorConfig.load( getResource( "elevator.yml" ), getDataFolder().toPath().resolve( "elevator.yml" ) );
     @Getter
     private final ElevatorSystem system = new ElevatorSystem( elevatorConfig.getBaseBlockType(), elevatorConfig.getElevatorHeight() );
 
