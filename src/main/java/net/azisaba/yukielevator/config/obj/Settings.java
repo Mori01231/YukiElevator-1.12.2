@@ -10,7 +10,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import lombok.Data;
 
 @Data
-@SerializableAs( "YukiElevator.Settings" )
+@SerializableAs("YukiElevator.Settings")
 public class Settings implements ConfigurationSerializable {
 
     private Material baseBlockType;
@@ -19,15 +19,15 @@ public class Settings implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> values = new LinkedHashMap<>();
-        values.put( "baseBlockType", baseBlockType );
-        values.put( "elevatorHeight", elevatorHeight );
+        values.put("baseBlockType", baseBlockType);
+        values.put("elevatorHeight", elevatorHeight);
         return values;
     }
 
-    public static Settings deserialize( Map<String, Object> values ) {
+    public static Settings deserialize(Map<String, Object> values) {
         Settings obj = new Settings();
-        obj.baseBlockType = Material.getMaterial( (String) values.get( "baseBlockType" ) );
-        obj.elevatorHeight = (int) values.get( "elevatorHeight" );
+        obj.baseBlockType = Material.getMaterial((String) values.get("baseBlockType"));
+        obj.elevatorHeight = (int) values.get("elevatorHeight");
         return obj;
     }
 }

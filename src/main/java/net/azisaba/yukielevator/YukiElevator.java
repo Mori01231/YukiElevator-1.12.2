@@ -20,15 +20,15 @@ public class YukiElevator extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        ConfigurationSerialization.registerClass( Settings.class, "YukiElevator.Settings" );
+        ConfigurationSerialization.registerClass(Settings.class, "YukiElevator.Settings");
 
-        this.elevatorConfig = new ElevatorConfig( getResource( "elevator.yml" ), getDataFolder().toPath().resolve( "elevator.yml" ) );
+        this.elevatorConfig = new ElevatorConfig(getResource("elevator.yml"), getDataFolder().toPath().resolve("elevator.yml"));
         elevatorConfig.saveDefaultConfig();
         elevatorConfig.loadConfig();
 
-        this.system = new ElevatorSystem( elevatorConfig.getSettings().getBaseBlockType(), elevatorConfig.getSettings().getElevatorHeight() );
+        this.system = new ElevatorSystem(elevatorConfig.getSettings().getBaseBlockType(), elevatorConfig.getSettings().getElevatorHeight());
 
-        getServer().getPluginManager().registerEvents( new ElevatorUpListener( this ), this );
-        getServer().getPluginManager().registerEvents( new ElevatorDownListener( this ), this );
+        getServer().getPluginManager().registerEvents(new ElevatorUpListener(this), this);
+        getServer().getPluginManager().registerEvents(new ElevatorDownListener(this), this);
     }
 }

@@ -12,32 +12,30 @@ import lombok.RequiredArgsConstructor;
 
 import net.azisaba.yukielevator.YukiElevator;
 
-import me.rayzr522.jsonmessage.JSONMessage;
-
 @RequiredArgsConstructor
 public class ElevatorDownListener implements Listener {
 
     private final YukiElevator plugin;
 
     @EventHandler
-    public void onElevatorDown( PlayerToggleSneakEvent event ) {
+    public void onElevatorDown(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
 
-        Block baseFrom = player.getLocation().getBlock().getRelative( BlockFace.DOWN );
-        if ( !plugin.getSystem().isFloor( baseFrom ) ) {
+        Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        if (!plugin.getSystem().isFloor(baseFrom)) {
             return;
         }
-        if ( !event.isSneaking() ) {
+        if (!event.isSneaking()) {
             return;
         }
 
-        plugin.getSystem().tryFindFloor( baseFrom, BlockFace.DOWN ).ifPresent( baseTo -> {
-            if ( !player.hasPermission( "yukielevator.use" ) && !player.hasPermission( "yukielevator.down" ) ) {
-                JSONMessage.create( ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！" ).tooltip( "yukielevator.use または yukielevator.down のどちらかの権限が必要です。" ).send( player );
+        plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN).ifPresent(baseTo -> {
+            if (!player.hasPermission("yukielevator.use") && !player.hasPermission("yukielevator.down")) {
+                player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");
                 return;
             }
 
-            plugin.getSystem().teleportToFloor( player, baseFrom, baseTo );
-        } );
+            plugin.getSystem().teleportToFloor(player, baseFrom, baseTo);
+        });
     }
 }

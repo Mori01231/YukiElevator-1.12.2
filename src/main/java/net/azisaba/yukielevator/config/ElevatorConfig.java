@@ -22,16 +22,16 @@ public class ElevatorConfig {
 
     private Settings settings;
 
-    @SneakyThrows( { IOException.class } )
+    @SneakyThrows({ IOException.class })
     public void saveDefaultConfig() {
-        if ( !Files.isRegularFile( file ) ) {
-            Files.createDirectories( file.getParent() );
-            Files.copy( resource, file );
+        if (!Files.isRegularFile(file)) {
+            Files.createDirectories(file.getParent());
+            Files.copy(resource, file);
         }
     }
 
     public void loadConfig() {
-        this.config = YamlConfiguration.loadConfiguration( file.toFile() );
-        this.settings = (Settings) config.get( "settings" );
+        this.config = YamlConfiguration.loadConfiguration(file.toFile());
+        this.settings = (Settings) config.get("settings");
     }
 }

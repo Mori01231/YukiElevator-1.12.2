@@ -7,7 +7,7 @@
 
   <groupId>net.azisaba</groupId>
   <artifactId>YukiElevator</artifactId>
-  <version>3.6.2</version>
+  <version>3.6.3</version>
 
   <name>${project.artifactId}</name>
 
@@ -33,22 +33,6 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
-        <configuration>
-          <minimizeJar>true</minimizeJar>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
@@ -56,10 +40,6 @@
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-    </repository>
-    <repository>
-      <id>rayzr-repo</id>
-      <url>https://cdn.rawgit.com/Rayzr522/maven-repo/master/</url>
     </repository>
   </repositories>
 
@@ -75,11 +55,6 @@
       <artifactId>bukkit</artifactId>
       <version>1.12.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>me.rayzr522</groupId>
-      <artifactId>jsonmessage</artifactId>
-      <version>1.0.0</version>
     </dependency>
   </dependencies>
 </project>
