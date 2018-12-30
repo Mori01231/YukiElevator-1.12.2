@@ -18,7 +18,7 @@ public class Settings implements ConfigurationSerializable {
 
 	@Override
 	public Map<String, Object> serialize() {
-		Map<String, Object> values = new LinkedHashMap<>();
+		Map<String, Object> values = new LinkedHashMap<String, Object>();
 		values.put("baseBlockType", baseBlockType);
 		values.put("elevatorHeight", elevatorHeight);
 		return values;
