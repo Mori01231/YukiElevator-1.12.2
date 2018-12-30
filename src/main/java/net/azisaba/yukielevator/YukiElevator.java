@@ -13,22 +13,22 @@ import net.azisaba.yukielevator.util.ElevatorSystem;
 
 public class YukiElevator extends JavaPlugin {
 
-    @Getter
-    private ElevatorConfig elevatorConfig;
-    @Getter
-    private ElevatorSystem system;
+	@Getter
+	private ElevatorConfig elevatorConfig;
+	@Getter
+	private ElevatorSystem system;
 
-    @Override
-    public void onEnable() {
-        ConfigurationSerialization.registerClass(Settings.class, "YukiElevator.Settings");
+	@Override
+	public void onEnable() {
+		ConfigurationSerialization.registerClass(Settings.class, "YukiElevator.Settings");
 
-        this.elevatorConfig = new ElevatorConfig(getResource("elevator.yml"), getDataFolder().toPath().resolve("elevator.yml"));
-        elevatorConfig.saveDefaultConfig();
-        elevatorConfig.loadConfig();
+		this.elevatorConfig = new ElevatorConfig(getResource("elevator.yml"), getDataFolder().toPath().resolve("elevator.yml"));
+		elevatorConfig.saveDefaultConfig();
+		elevatorConfig.loadConfig();
 
-        this.system = new ElevatorSystem(elevatorConfig.getSettings().getBaseBlockType(), elevatorConfig.getSettings().getElevatorHeight());
+		this.system = new ElevatorSystem(elevatorConfig.getSettings().getBaseBlockType(), elevatorConfig.getSettings().getElevatorHeight());
 
-        getServer().getPluginManager().registerEvents(new ElevatorUpListener(this), this);
-        getServer().getPluginManager().registerEvents(new ElevatorDownListener(this), this);
-    }
+		getServer().getPluginManager().registerEvents(new ElevatorUpListener(this), this);
+		getServer().getPluginManager().registerEvents(new ElevatorDownListener(this), this);
+	}
 }

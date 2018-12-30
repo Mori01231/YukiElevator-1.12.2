@@ -13,21 +13,21 @@ import lombok.Data;
 @SerializableAs("YukiElevator.Settings")
 public class Settings implements ConfigurationSerializable {
 
-    private Material baseBlockType;
-    private int elevatorHeight;
+	private Material baseBlockType;
+	private int elevatorHeight;
 
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> values = new LinkedHashMap<>();
-        values.put("baseBlockType", baseBlockType);
-        values.put("elevatorHeight", elevatorHeight);
-        return values;
-    }
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> values = new LinkedHashMap<>();
+		values.put("baseBlockType", baseBlockType);
+		values.put("elevatorHeight", elevatorHeight);
+		return values;
+	}
 
-    public static Settings deserialize(Map<String, Object> values) {
-        Settings obj = new Settings();
-        obj.baseBlockType = Material.getMaterial((String) values.get("baseBlockType"));
-        obj.elevatorHeight = (int) values.get("elevatorHeight");
-        return obj;
-    }
+	public static Settings deserialize(Map<String, Object> values) {
+		Settings obj = new Settings();
+		obj.baseBlockType = Material.getMaterial((String) values.get("baseBlockType"));
+		obj.elevatorHeight = (int) values.get("elevatorHeight");
+		return obj;
+	}
 }
