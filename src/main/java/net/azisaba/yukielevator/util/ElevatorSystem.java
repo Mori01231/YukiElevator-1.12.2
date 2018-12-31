@@ -36,7 +36,7 @@ public class ElevatorSystem {
     }
 
     public Optional<Block> tryFindFloor(Block baseFrom, BlockFace face) {
-        Vector direction = new Vector(face.getModX(), face.getModY(), face.getModZ());
+        Vector direction = face.getDirection();
         Location loc = baseFrom.getLocation().setDirection(direction);
         int maxDistance = baseFrom.getWorld().getMaxHeight();
 
@@ -60,7 +60,7 @@ public class ElevatorSystem {
         to.setDirection(direction);
 
         player.teleport(to);
-        player.playSound(to, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
+        player.playSound(to, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
         player.getWorld().spawnParticle(Particle.TOTEM, to, 50, 0.2, 0.2, 0.2, 0.5);
     }
 }
