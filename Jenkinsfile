@@ -1,10 +1,17 @@
-node {
-    stage 'チェックアウト'
-    git url: 'https://github.com/AzisabaDev/YukiElevator.git'
+pipeline {
+    agent any
 
-    stage 'ビルド'
-    sh 'mvn clean install'
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn -B clean install'
+            }
+        }
 
-    stage '成果物を保存'
-    archiveArtifacts 'target/*.jar'
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts 'target/*.jar'
+            }
+        }
+    }
 }
