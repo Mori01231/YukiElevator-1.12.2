@@ -2,6 +2,7 @@ name: ${project.name}
 version: ${project.version}
 main: net.azisaba.yukielevator.${project.name}
 author: YukiLeafX
+api-version: 1.13
 
 permissions:
   yukielevator.use:

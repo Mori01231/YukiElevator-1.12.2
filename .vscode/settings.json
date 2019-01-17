@@ -1,0 +1,5 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "yaml.format.enable": true,
+    "yaml.validate": false
+}

@@ -8,34 +8,45 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-import lombok.RequiredArgsConstructor;
-
 import net.azisaba.yukielevator.YukiElevator;
 
-@RequiredArgsConstructor
 public class ElevatorDownListener implements Listener {
 
     private final YukiElevator plugin;
+
+    public ElevatorDownListener(YukiElevator plugin) {
+        this.plugin = plugin;
+    }
+
+    private boolean hasPerms(Player player) {
+        if (player.hasPermission("yukielevator.use")) {
+            return true;
+        } else if (player.hasPermission("yukielevator.down")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @EventHandler
     public void onElevatorDown(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
 
         Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (!plugin.getSystem().isFloor(baseFrom)) {
+        if (plugin.getSystem().isFloor(baseFrom)) {
             return;
-        }
-        if (!event.isSneaking()) {
+        } else if (event.isSneaking()) {
             return;
         }
 
-        plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN).ifPresent(baseTo -> {
-            if (!player.hasPermission("yukielevator.use") && !player.hasPermission("yukielevator.down")) {
-                player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");
-                return;
-            }
+        Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN);
+        if (baseTo == null) {
+            return;
+        } else if (!hasPerms(player)) {
+            player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");
+            return;
+        }
 
-            plugin.getSystem().teleportToFloor(player, baseFrom, baseTo);
-        });
+        plugin.getSystem().teleportToFloor(player, baseFrom, baseTo);
     }
 }
