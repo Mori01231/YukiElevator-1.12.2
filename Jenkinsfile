@@ -1,27 +1,27 @@
 pipeline {
-    agent any
+  agent any
 
-    options {
-        skipDefaultCheckout()
+  options {
+    skipDefaultCheckout true
+  }
+
+  stages {
+    stage('チェックアウト') {
+      steps {
+        checkout scm
+      }
     }
 
-    stages {
-        stage('チェックアウト') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('ビルド') {
-            steps {
-                sh 'mvn -B clean install'
-            }
-        }
-
-        stage('成果物を保存') {
-            steps {
-                archiveArtifacts 'target/*.jar'
-            }
-        }
+    stage('ビルド') {
+      steps {
+        sh 'mvn -B clean install'
+      }
     }
+
+    stage('成果物を保存') {
+      steps {
+        archiveArtifacts 'target/*.jar'
+      }
+    }
+  }
 }
