@@ -1,14 +1,12 @@
 package net.azisaba.yukielevator;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
-
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
-import com.google.common.primitives.Ints;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,7 +17,7 @@ public class ElevatorConfig {
 
     private final YukiElevator plugin;
     private final InputStream resource;
-    private final File file;
+    private final Path file;
 
     private YamlConfiguration config;
     private Settings settings;
@@ -35,23 +33,23 @@ public class ElevatorConfig {
     public ElevatorConfig(YukiElevator plugin) {
         this.plugin = plugin;
         this.resource = plugin.getResource("elevator.yml");
-        this.file = new File(plugin.getDataFolder(), "elevator.yml");
+        this.file = plugin.getDataFolder().toPath().resolve("elevator.yml");
     }
 
     public void saveDefaultConfig() {
-        if (file.isFile()) {
+        if (Files.isRegularFile(file)) {
             return;
         }
         try {
-            Files.createParentDirs(file);
-            Files.asByteSink(file).writeFrom(resource);
+            Files.createDirectories(file.getParent());
+            Files.copy(resource, file);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "デフォルトの設定ファイルの保存中にエラーが発生しました。", ex);
         }
     }
 
     public void loadConfig() {
-        this.config = YamlConfiguration.loadConfiguration(file);
+        this.config = YamlConfiguration.loadConfiguration(file.toFile());
         this.settings = (Settings) config.get("settings");
     }
 
@@ -79,7 +77,7 @@ public class ElevatorConfig {
 
         @Override
         public Map<String, Object> serialize() {
-            Map<String, Object> values = Maps.newLinkedHashMap();
+            Map<String, Object> values = new LinkedHashMap<>();
             values.put("baseBlockType", baseBlockType);
             values.put("elevatorHeight", elevatorHeight);
             return values;
@@ -88,7 +86,7 @@ public class ElevatorConfig {
         public static Settings deserialize(Map<String, Object> values) {
             Settings obj = new Settings();
             obj.baseBlockType = Material.getMaterial((String) values.get("baseBlockType"));
-            obj.elevatorHeight = Ints.tryParse((String) values.get("elevatorHeight"));
+            obj.elevatorHeight = (int) values.get("elevatorHeight");
             return obj;
         }
     }

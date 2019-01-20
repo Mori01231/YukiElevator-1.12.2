@@ -2,8 +2,6 @@ package net.azisaba.yukielevator;
 
 import java.util.stream.IntStream;
 
-import com.google.common.collect.Iterators;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -41,7 +39,7 @@ public class ElevatorSystem {
         Location loc = baseFrom.getLocation().setDirection(direction);
 
         BlockIterator it = new BlockIterator(loc);
-        Iterators.advance(it, height);
+        IntStream.range(0, height).forEach(i -> it.next());
 
         while (it.hasNext()) {
             Block baseTo = it.next();
