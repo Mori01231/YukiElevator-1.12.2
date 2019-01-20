@@ -38,7 +38,7 @@ public class ElevatorSystem {
         Vector direction = face.getDirection();
         Location loc = baseFrom.getLocation().setDirection(direction);
 
-        BlockIterator it = new BlockIterator(loc);
+        BlockIterator it = new BlockIterator(loc, 0, 256);
         IntStream.range(0, height).forEach(i -> it.next());
 
         while (it.hasNext()) {
