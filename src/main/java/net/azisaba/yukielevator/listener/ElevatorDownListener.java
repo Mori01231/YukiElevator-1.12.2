@@ -33,9 +33,9 @@ public class ElevatorDownListener implements Listener {
         Player player = event.getPlayer();
 
         Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (plugin.getSystem().isFloor(baseFrom)) {
+        if (!plugin.getSystem().isFloor(baseFrom)) {
             return;
-        } else if (event.isSneaking()) {
+        } else if (!event.isSneaking()) {
             return;
         }
 
