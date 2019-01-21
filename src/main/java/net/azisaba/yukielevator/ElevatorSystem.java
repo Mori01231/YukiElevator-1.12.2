@@ -30,7 +30,7 @@ public class ElevatorSystem {
         if (base.getType() != baseType) {
             return false;
         } else {
-            return IntStream.range(0, height).mapToObj(i -> base.getRelative(BlockFace.UP, i)).allMatch(this::isSafe);
+            return IntStream.range(1, height).mapToObj(i -> base.getRelative(BlockFace.UP, i)).allMatch(this::isSafe);
         }
     }
 
