@@ -22,7 +22,7 @@ public class ElevatorSystem {
         this.height = config.getSettings().getElevatorHeight();
     }
 
-    public boolean isSafe(Block block) {
+    private boolean isSafe(Block block) {
         return block.getType().isTransparent();
     }
 
@@ -37,8 +37,9 @@ public class ElevatorSystem {
     public Block tryFindFloor(Block baseFrom, BlockFace face) {
         Vector direction = face.getDirection();
         Location loc = baseFrom.getLocation().setDirection(direction);
+        int maxDistance = baseFrom.getWorld().getMaxHeight();
 
-        BlockIterator it = new BlockIterator(loc, 0, 256);
+        BlockIterator it = new BlockIterator(loc, 0, maxDistance);
         IntStream.range(0, height).forEach(i -> it.next());
 
         while (it.hasNext()) {

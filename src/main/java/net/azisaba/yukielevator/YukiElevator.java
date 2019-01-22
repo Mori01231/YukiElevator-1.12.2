@@ -21,7 +21,7 @@ public class YukiElevator extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        ConfigurationSerialization.registerClass(ElevatorConfig.Settings.class, "ElevatorConfig.Settings");
+        ConfigurationSerialization.registerClass(Settings.class, "yukielevator.Settings");
 
         this.elevatorConfig = new ElevatorConfig(this);
         elevatorConfig.saveDefaultConfig();

@@ -1,5 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
     "yaml.format.enable": true,
-    "yaml.validate": false
+    "yaml.validate": false,
+    "xml.format.splitAttributes": true
 }

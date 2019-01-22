@@ -1,4 +1,4 @@
 settings:
-  ==: ElevatorConfig.Settings
+  ==: yukielevator.Settings
   baseBlockType: DIAMOND_BLOCK
   elevatorHeight: 3
