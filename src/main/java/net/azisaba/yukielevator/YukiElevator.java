@@ -1,6 +1,5 @@
 package net.azisaba.yukielevator;
 
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.yukielevator.listener.ElevatorDownListener;
@@ -21,8 +20,6 @@ public class YukiElevator extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        ConfigurationSerialization.registerClass(Settings.class, "yukielevator.Settings");
-
         this.elevatorConfig = new ElevatorConfig(this);
         elevatorConfig.saveDefaultConfig();
         elevatorConfig.loadConfig();

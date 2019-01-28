@@ -18,8 +18,8 @@ public class ElevatorSystem {
     private final int height;
 
     public ElevatorSystem(ElevatorConfig config) {
-        this.baseType = config.getSettings().getBaseBlockType();
-        this.height = config.getSettings().getElevatorHeight();
+        this.baseType = config.getBaseBlockType();
+        this.height = config.getElevatorHeight();
     }
 
     private boolean isSafe(Block block) {

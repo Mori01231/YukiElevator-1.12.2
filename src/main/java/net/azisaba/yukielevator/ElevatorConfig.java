@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ElevatorConfig {
@@ -15,14 +16,20 @@ public class ElevatorConfig {
     private final Path file;
 
     private YamlConfiguration config;
-    private Settings settings;
+
+    private Material baseBlockType;
+    private int elevatorHeight;
 
     public YamlConfiguration getConfig() {
         return config;
     }
 
-    public Settings getSettings() {
-        return settings;
+    public Material getBaseBlockType() {
+        return baseBlockType;
+    }
+
+    public int getElevatorHeight() {
+        return elevatorHeight;
     }
 
     public ElevatorConfig(YukiElevator plugin) {
@@ -43,8 +50,16 @@ public class ElevatorConfig {
         }
     }
 
+    private void loadValues() {
+        String baseBlockType = config.getString("baseBlockType", "DIAMOND_BLOCK");
+        this.baseBlockType = Material.getMaterial(baseBlockType);
+
+        int elevatorHeight = config.getInt("elevatorHeight", 3);
+        this.elevatorHeight = elevatorHeight;
+    }
+
     public void loadConfig() {
         this.config = YamlConfiguration.loadConfiguration(file.toFile());
-        this.settings = (Settings) config.get("settings");
+        loadValues();
     }
 }
