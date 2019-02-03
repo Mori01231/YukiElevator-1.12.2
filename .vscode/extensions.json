@@ -1,7 +1,8 @@
 {
     "recommendations": [
+        "robertohuertasm.vscode-icons",
         "vscjava.vscode-java-pack",
-        "redhat.vscode-xml",
+        "DotJoshJohnson.xml",
         "redhat.vscode-yaml"
     ]
 }

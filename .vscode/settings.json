@@ -1,6 +1,6 @@
 {
+    "workbench.iconTheme": "vscode-icons",
     "java.configuration.updateBuildConfiguration": "automatic",
     "yaml.format.enable": true,
-    "yaml.validate": false,
-    "xml.format.splitAttributes": true
+    "yaml.validate": false
 }
