@@ -1,6 +1,9 @@
 package net.azisaba.yukielevator.listener;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -18,35 +21,35 @@ public class ElevatorDownListener implements Listener {
         this.plugin = plugin;
     }
 
-    private boolean hasPerms(Player player) {
-        if (player.hasPermission("yukielevator.use")) {
-            return true;
-        } else if (player.hasPermission("yukielevator.down")) {
-            return true;
-        } else {
-            return false;
-        }
+    public YukiElevator getPlugin() {
+        return plugin;
     }
 
     @EventHandler
     public void onElevatorDown(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
 
+        if (!event.isSneaking())
+            return;
+
         Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (!plugin.getSystem().isFloor(baseFrom)) {
+        if (!plugin.getSystem().isFloor(baseFrom))
             return;
-        } else if (!event.isSneaking()) {
-            return;
-        }
 
         Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN);
-        if (baseTo == null) {
+        if (baseTo == null)
             return;
-        } else if (!hasPerms(player)) {
+
+        if (!player.hasPermission("yukielevator.down")) {
             player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");
             return;
         }
 
-        plugin.getSystem().teleportToFloor(player, baseFrom, baseTo);
+        Location playerFrom = player.getLocation();
+        Location playerTo = plugin.getSystem().calculatePlayerTo(playerFrom, baseFrom, baseTo);
+
+        player.teleport(playerTo);
+        player.playSound(playerTo, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+        player.getWorld().spawnParticle(Particle.TOTEM, playerTo, 50, 0.2, 0.2, 0.2, 0.5);
     }
 }

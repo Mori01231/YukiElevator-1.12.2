@@ -2,6 +2,8 @@ package net.azisaba.yukielevator.listener;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -19,47 +21,43 @@ public class ElevatorUpListener implements Listener {
         this.plugin = plugin;
     }
 
-    private boolean hasPerms(Player player) {
-        if (player.hasPermission("yukielevator.use")) {
-            return true;
-        } else if (player.hasPermission("yukielevator.up")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isPlayerJumping(Player player, Location moveFrom, Location moveTo) {
-        if (player.isDead()) {
-            return false;
-        } else if (player.isOnGround()) {
-            return false;
-        } else if (player.isFlying()) {
-            return false;
-        } else {
-            return moveFrom.getY() < moveTo.getY() && player.getVelocity().getY() > 0;
-        }
+    public YukiElevator getPlugin() {
+        return plugin;
     }
 
     @EventHandler
     public void onElevatorUp(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
+        if (player.isOnGround())
+            return;
+        if (player.isDead())
+            return;
+        if (player.isFlying())
+            return;
+        if (player.isSwimming())
+            return;
+        if (player.getVelocity().getY() <= 0)
+            return;
+
         Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (!plugin.getSystem().isFloor(baseFrom)) {
+        if (!plugin.getSystem().isFloor(baseFrom))
             return;
-        } else if (!isPlayerJumping(player, event.getFrom(), event.getTo())) {
-            return;
-        }
 
         Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.UP);
-        if (baseTo == null) {
+        if (baseTo == null)
             return;
-        } else if (!hasPerms(player)) {
+
+        if (!player.hasPermission("yukielevator.up")) {
             player.sendMessage(ChatColor.RED + "あなたはエレベーターを上る権限を持っていません！");
             return;
         }
 
-        plugin.getSystem().teleportToFloor(player, baseFrom, baseTo);
+        Location playerFrom = player.getLocation();
+        Location playerTo = plugin.getSystem().calculatePlayerTo(playerFrom, baseFrom, baseTo);
+
+        player.teleport(playerTo);
+        player.playSound(playerTo, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+        player.getWorld().spawnParticle(Particle.TOTEM, playerTo, 50, 0.2, 0.2, 0.2, 0.5);
     }
 }

@@ -2,16 +2,19 @@ package net.azisaba.yukielevator;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.yukielevator.config.ElevatorConfig;
+import net.azisaba.yukielevator.elevator.ElevatorSystem;
 import net.azisaba.yukielevator.listener.ElevatorDownListener;
 import net.azisaba.yukielevator.listener.ElevatorUpListener;
 
 public class YukiElevator extends JavaPlugin {
 
-    private ElevatorConfig elevatorConfig;
+    private ElevatorConfig config;
     private ElevatorSystem system;
 
-    public ElevatorConfig getElevatorConfig() {
-        return elevatorConfig;
+    @Override
+    public ElevatorConfig getConfig() {
+        return config;
     }
 
     public ElevatorSystem getSystem() {
@@ -20,11 +23,10 @@ public class YukiElevator extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.elevatorConfig = new ElevatorConfig(this);
-        elevatorConfig.saveDefaultConfig();
-        elevatorConfig.loadConfig();
+        this.config = new ElevatorConfig(this);
+        config.loadConfig();
 
-        this.system = new ElevatorSystem(elevatorConfig);
+        this.system = new ElevatorSystem(config);
 
         getServer().getPluginManager().registerEvents(new ElevatorUpListener(this), this);
         getServer().getPluginManager().registerEvents(new ElevatorDownListener(this), this);
