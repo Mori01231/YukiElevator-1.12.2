@@ -29,24 +29,31 @@ public class ElevatorUpListener implements Listener {
     public void onElevatorUp(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (player.isOnGround())
+        if (player.isOnGround()) {
             return;
-        if (player.isDead())
+        }
+        if (player.isDead()) {
             return;
-        if (player.isFlying())
+        }
+        if (player.isFlying()) {
             return;
-        if (player.isSwimming())
+        }
+        if (player.isSwimming()) {
             return;
-        if (player.getVelocity().getY() <= 0)
+        }
+        if (player.getVelocity().getY() <= 0) {
             return;
+        }
 
         Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (!plugin.getSystem().isFloor(baseFrom))
+        if (!plugin.getSystem().isFloor(baseFrom)) {
             return;
+        }
 
         Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.UP);
-        if (baseTo == null)
+        if (baseTo == null) {
             return;
+        }
 
         if (!player.hasPermission("yukielevator.up")) {
             player.sendMessage(ChatColor.RED + "あなたはエレベーターを上る権限を持っていません！");

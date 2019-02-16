@@ -29,16 +29,19 @@ public class ElevatorDownListener implements Listener {
     public void onElevatorDown(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
 
-        if (!event.isSneaking())
+        if (!event.isSneaking()) {
             return;
+        }
 
         Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (!plugin.getSystem().isFloor(baseFrom))
+        if (!plugin.getSystem().isFloor(baseFrom)) {
             return;
+        }
 
         Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN);
-        if (baseTo == null)
+        if (baseTo == null) {
             return;
+        }
 
         if (!player.hasPermission("yukielevator.down")) {
             player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");

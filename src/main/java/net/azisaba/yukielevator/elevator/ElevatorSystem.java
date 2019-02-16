@@ -38,8 +38,9 @@ public class ElevatorSystem {
     }
 
     public boolean isFloor(Block baseFrom) {
-        if (baseFrom.getType() != baseType)
+        if (baseFrom.getType() != baseType) {
             return false;
+        }
 
         return IntStream.range(1, height).allMatch(distance -> isSafe(baseFrom.getRelative(BlockFace.UP, distance)));
     }
@@ -52,11 +53,13 @@ public class ElevatorSystem {
         BlockIterator it = new BlockIterator(loc, 0, maxDistance);
         Iterators.advance(it, height);
 
-        for (Block baseTo : Lists.newArrayList(it))
-            if (isFloor(baseTo))
+        for (Block baseTo : Lists.newArrayList(it)) {
+            if (isFloor(baseTo)) {
                 return baseTo;
-            else if (!isSafe(baseTo))
+            } else if (!isSafe(baseTo)) {
                 break;
+            }
+        }
 
         return null;
     }

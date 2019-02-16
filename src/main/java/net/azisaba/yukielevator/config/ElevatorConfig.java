@@ -59,8 +59,9 @@ public class ElevatorConfig extends YamlConfiguration {
     }
 
     public void saveDefaultConfig() {
-        if (Files.isRegularFile(outputFile))
+        if (Files.isRegularFile(outputFile)) {
             return;
+        }
 
         try {
             Files.createDirectories(outputFile.getParent());
@@ -92,12 +93,13 @@ public class ElevatorConfig extends YamlConfiguration {
             plugin.getLogger().log(Level.SEVERE, "設定ファイルを読み込み用として開けません。", ex);
         }
 
-        if (reader != null)
+        if (reader != null) {
             try {
                 load(reader);
             } catch (IOException | InvalidConfigurationException ex) {
                 plugin.getLogger().log(Level.SEVERE, "設定ファイルの読み込み中にエラーが発生しました。", ex);
             }
+        }
 
         this.baseBlockType = Material.getMaterial(getString("baseBlockType", "DIAMOND_BLOCK"));
         this.elevatorHeight = getInt("elevatorHeight", 3);
