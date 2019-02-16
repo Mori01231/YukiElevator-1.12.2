@@ -1,14 +1,11 @@
 package net.azisaba.yukielevator.config;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
@@ -20,7 +17,7 @@ import net.azisaba.yukielevator.YukiElevator;
 public class ElevatorConfig extends YamlConfiguration {
 
     private final YukiElevator plugin;
-    private final URL resourceFile;
+    private final Supplier<InputStream> resourceSupplier;
     private final Path outputFile;
 
     private Material baseBlockType;
@@ -28,7 +25,7 @@ public class ElevatorConfig extends YamlConfiguration {
 
     public ElevatorConfig(YukiElevator plugin) {
         this.plugin = plugin;
-        this.resourceFile = plugin.getClass().getClassLoader().getResource("config/elevator.yml");
+        this.resourceSupplier = () -> plugin.getClass().getClassLoader().getResourceAsStream("config/elevator.yml");
         this.outputFile = plugin.getDataFolder().toPath().resolve("elevator.yml");
     }
 
@@ -36,8 +33,8 @@ public class ElevatorConfig extends YamlConfiguration {
         return plugin;
     }
 
-    public URL getResourceFile() {
-        return resourceFile;
+    public Supplier<InputStream> getResourceSupplier() {
+        return resourceSupplier;
     }
 
     public Path getOutputFile() {
@@ -52,12 +49,6 @@ public class ElevatorConfig extends YamlConfiguration {
         return elevatorHeight;
     }
 
-    public InputStream openResourceFileStream() throws IOException {
-        URLConnection conn = resourceFile.openConnection();
-        conn.setUseCaches(false);
-        return conn.getInputStream();
-    }
-
     public void saveDefaultConfig() {
         if (Files.isRegularFile(outputFile)) {
             return;
@@ -65,9 +56,7 @@ public class ElevatorConfig extends YamlConfiguration {
 
         try {
             Files.createDirectories(outputFile.getParent());
-
-            InputStream in = openResourceFileStream();
-            Files.copy(in, outputFile);
+            Files.copy(resourceSupplier.get(), outputFile);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "設定ファイルの保存中にエラーが発生しました。", ex);
         }
@@ -78,27 +67,17 @@ public class ElevatorConfig extends YamlConfiguration {
     }
 
     public void loadConfig() {
-        Reader reader = null;
-
         try {
             if (Files.isRegularFile(outputFile)) {
-                reader = Files.newBufferedReader(outputFile);
+                load(outputFile.toFile());
             } else {
-                InputStream in = openResourceFileStream();
-                reader = new BufferedReader(new InputStreamReader(in));
-
+                load(new InputStreamReader(resourceSupplier.get()));
                 saveDefaultConfigAsync();
             }
         } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "設定ファイルを読み込み用として開けません。", ex);
-        }
-
-        if (reader != null) {
-            try {
-                load(reader);
-            } catch (IOException | InvalidConfigurationException ex) {
-                plugin.getLogger().log(Level.SEVERE, "設定ファイルの読み込み中にエラーが発生しました。", ex);
-            }
+            plugin.getLogger().log(Level.SEVERE, "設定ファイルの読み込み中にエラーが発生しました。", ex);
+        } catch (InvalidConfigurationException ex) {
+            plugin.getLogger().log(Level.SEVERE, "設定ファイルの書式が間違っています。", ex);
         }
 
         this.baseBlockType = Material.getMaterial(getString("baseBlockType", "DIAMOND_BLOCK"));
