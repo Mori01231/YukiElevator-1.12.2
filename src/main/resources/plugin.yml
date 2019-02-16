@@ -1,8 +1,9 @@
 name: ${project.name}
 version: ${project.version}
 main: net.azisaba.yukielevator.${project.name}
-description: "シンプルなエレベータープラグイン"
-website: "https://github.com/AzisabaDev/${project.name}"
+
+description: ${project.description}
+website: ${project.url}
 author: YukiLeafX
 api-version: 1.13
 

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -18,7 +20,7 @@ import net.azisaba.yukielevator.YukiElevator;
 public class ElevatorConfig extends YamlConfiguration {
 
     private final YukiElevator plugin;
-    private final InputStream resourceFile;
+    private final URL resourceFile;
     private final Path outputFile;
 
     private Material baseBlockType;
@@ -26,7 +28,7 @@ public class ElevatorConfig extends YamlConfiguration {
 
     public ElevatorConfig(YukiElevator plugin) {
         this.plugin = plugin;
-        this.resourceFile = plugin.getResource("config/elevator.yml");
+        this.resourceFile = plugin.getClass().getClassLoader().getResource("config/elevator.yml");
         this.outputFile = plugin.getDataFolder().toPath().resolve("elevator.yml");
     }
 
@@ -34,7 +36,7 @@ public class ElevatorConfig extends YamlConfiguration {
         return plugin;
     }
 
-    public InputStream getResourceFile() {
+    public URL getResourceFile() {
         return resourceFile;
     }
 
@@ -50,13 +52,21 @@ public class ElevatorConfig extends YamlConfiguration {
         return elevatorHeight;
     }
 
+    public InputStream openResourceFileStream() throws IOException {
+        URLConnection conn = resourceFile.openConnection();
+        conn.setUseCaches(false);
+        return conn.getInputStream();
+    }
+
     public void saveDefaultConfig() {
         if (Files.isRegularFile(outputFile))
             return;
 
         try {
             Files.createDirectories(outputFile.getParent());
-            Files.copy(resourceFile, outputFile);
+
+            InputStream in = openResourceFileStream();
+            Files.copy(in, outputFile);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "設定ファイルの保存中にエラーが発生しました。", ex);
         }
@@ -69,16 +79,17 @@ public class ElevatorConfig extends YamlConfiguration {
     public void loadConfig() {
         Reader reader = null;
 
-        if (Files.isRegularFile(outputFile)) {
-            try {
+        try {
+            if (Files.isRegularFile(outputFile)) {
                 reader = Files.newBufferedReader(outputFile);
-            } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "設定ファイルを読み込み用として開けません。", ex);
-            }
-        } else {
-            reader = new BufferedReader(new InputStreamReader(resourceFile));
+            } else {
+                InputStream in = openResourceFileStream();
+                reader = new BufferedReader(new InputStreamReader(in));
 
-            saveDefaultConfigAsync();
+                saveDefaultConfigAsync();
+            }
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.SEVERE, "設定ファイルを読み込み用として開けません。", ex);
         }
 
         if (reader != null)

@@ -1,3 +1,2 @@
-settings:
-  baseBlockType: DIAMOND_BLOCK
-  elevatorHeight: 3
+baseBlockType: DIAMOND_BLOCK
+elevatorHeight: 3
