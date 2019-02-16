@@ -49,29 +49,29 @@ public class ElevatorSystem {
         Vector direction = face.getDirection();
         Location loc = baseFrom.getLocation().setDirection(direction);
         int maxDistance = baseFrom.getWorld().getMaxHeight();
-
         BlockIterator it = new BlockIterator(loc, 0, maxDistance);
-        Iterators.advance(it, height);
 
+        Iterators.advance(it, height);
         for (Block baseTo : Lists.newArrayList(it)) {
+            if (!isSafe(baseTo)) {
+                return null;
+            }
             if (isFloor(baseTo)) {
                 return baseTo;
-            } else if (!isSafe(baseTo)) {
-                break;
             }
         }
-
         return null;
     }
 
     public Location calculatePlayerTo(Location playerFrom, Block baseFrom, Block baseTo) {
         Location playerTo = baseTo.getRelative(BlockFace.UP).getLocation();
 
-        Vector relativeOnBlock = playerFrom.clone().subtract(baseFrom.getLocation()).toVector().setY(0);
-        playerTo.add(relativeOnBlock);
+        Location xzDiff = playerFrom.clone().subtract(baseFrom.getLocation());
+        xzDiff.setY(0);
+        playerTo.add(xzDiff);
 
-        Vector playerDirection = playerFrom.getDirection();
-        playerTo.setDirection(playerDirection);
+        Vector direction = playerFrom.getDirection();
+        playerTo.setDirection(direction);
 
         return playerTo;
     }
