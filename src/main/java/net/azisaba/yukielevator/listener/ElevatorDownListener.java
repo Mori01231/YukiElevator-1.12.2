@@ -15,44 +15,44 @@ import net.azisaba.yukielevator.YukiElevator;
 
 public class ElevatorDownListener implements Listener {
 
-    private final YukiElevator plugin;
+	private final YukiElevator plugin;
 
-    public ElevatorDownListener(YukiElevator plugin) {
-        this.plugin = plugin;
-    }
+	public ElevatorDownListener(YukiElevator plugin) {
+		this.plugin = plugin;
+	}
 
-    public YukiElevator getPlugin() {
-        return plugin;
-    }
+	public YukiElevator getPlugin() {
+		return plugin;
+	}
 
-    @EventHandler
-    public void onElevatorDown(PlayerToggleSneakEvent event) {
-        Player player = event.getPlayer();
+	@EventHandler
+	public void onElevatorDown(PlayerToggleSneakEvent event) {
+		Player player = event.getPlayer();
 
-        if (!event.isSneaking()) {
-            return;
-        }
+		if (!event.isSneaking()) {
+			return;
+		}
 
-        Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (!plugin.getSystem().isFloor(baseFrom)) {
-            return;
-        }
+		Block baseFrom = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+		if (!plugin.getSystem().isFloor(baseFrom)) {
+			return;
+		}
 
-        Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN);
-        if (baseTo == null) {
-            return;
-        }
+		Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.DOWN);
+		if (baseTo == null) {
+			return;
+		}
 
-        if (!player.hasPermission("yukielevator.down")) {
-            player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");
-            return;
-        }
+		if (!player.hasPermission("yukielevator.down")) {
+			player.sendMessage(ChatColor.RED + "あなたはエレベーターを下る権限を持っていません！");
+			return;
+		}
 
-        Location playerFrom = player.getLocation();
-        Location playerTo = plugin.getSystem().calculatePlayerTo(playerFrom, baseFrom, baseTo);
+		Location playerFrom = player.getLocation();
+		Location playerTo = plugin.getSystem().calculatePlayerTo(playerFrom, baseFrom, baseTo);
 
-        player.teleport(playerTo);
-        player.playSound(playerTo, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-        player.getWorld().spawnParticle(Particle.TOTEM, playerTo, 50, 0.2, 0.2, 0.2, 0.5);
-    }
+		player.teleport(playerTo);
+		player.playSound(playerTo, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+		player.getWorld().spawnParticle(Particle.TOTEM, playerTo, 50, 0.2, 0.2, 0.2, 0.5);
+	}
 }
