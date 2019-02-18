@@ -12,7 +12,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-public abstract class Config extends YamlConfiguration {
+public class Config extends YamlConfiguration {
 
 	private final Plugin plugin;
 	private final Supplier<InputStream> resourceSupplier;
@@ -57,9 +57,11 @@ public abstract class Config extends YamlConfiguration {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveDefaultConfig());
 	}
 
-	public abstract void onLoad();
+	public void onLoad() {
+	}
 
-	public abstract void onSave();
+	public void onSave() {
+	}
 
 	public void loadConfig() {
 		try {
