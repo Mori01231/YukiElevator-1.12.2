@@ -21,8 +21,13 @@ public class ElevatorConfig extends Config {
 		return elevatorHeight;
 	}
 
+	@Override
 	public void onLoad() {
 		this.baseBlockType = Material.getMaterial(getString("baseBlockType", "DIAMOND_BLOCK"));
 		this.elevatorHeight = getInt("elevatorHeight", 3);
+	}
+
+	@Override
+	public void onSave() {
 	}
 }
