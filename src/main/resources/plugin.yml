@@ -1,12 +1,10 @@
 name: ${project.name}
 version: ${project.version}
 main: net.azisaba.yukielevator.${project.name}
-
 description: ${project.description}
 website: ${project.url}
 author: YukiLeafX
 api-version: 1.13
-
 permissions:
   yukielevator.use:
     default: true
