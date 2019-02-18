@@ -52,11 +52,11 @@ public class ElevatorSystem {
 
 		Iterators.advance(it, height);
 		for (Block baseTo : Lists.newArrayList(it)) {
-			if (!isSafe(baseTo)) {
-				return null;
-			}
 			if (isFloor(baseTo)) {
 				return baseTo;
+			}
+			if (!isSafe(baseTo)) {
+				return null;
 			}
 		}
 		return null;
