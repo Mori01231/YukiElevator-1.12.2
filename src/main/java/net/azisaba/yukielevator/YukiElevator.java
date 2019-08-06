@@ -9,26 +9,26 @@ import net.azisaba.yukielevator.listener.ElevatorUpListener;
 
 public class YukiElevator extends JavaPlugin {
 
-	private ElevatorConfig config;
-	private ElevatorSystem system;
+    private ElevatorConfig config;
+    private ElevatorSystem system;
 
-	@Override
-	public ElevatorConfig getConfig() {
-		return config;
-	}
+    @Override
+    public ElevatorConfig getConfig() {
+        return config;
+    }
 
-	public ElevatorSystem getSystem() {
-		return system;
-	}
+    public ElevatorSystem getSystem() {
+        return system;
+    }
 
-	@Override
-	public void onEnable() {
-		this.config = new ElevatorConfig(this);
-		config.loadConfig();
+    @Override
+    public void onEnable() {
+        config = new ElevatorConfig(this);
+        config.loadConfig();
 
-		this.system = new ElevatorSystem(config);
+        system = new ElevatorSystem(config);
 
-		getServer().getPluginManager().registerEvents(new ElevatorUpListener(this), this);
-		getServer().getPluginManager().registerEvents(new ElevatorDownListener(this), this);
-	}
+        getServer().getPluginManager().registerEvents(new ElevatorUpListener(this), this);
+        getServer().getPluginManager().registerEvents(new ElevatorDownListener(this), this);
+    }
 }
