@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import net.azisaba.yukielevator.YukiElevator;
+import org.bukkit.util.Vector;
 
 public class ElevatorUpListener implements Listener {
 
@@ -38,9 +39,7 @@ public class ElevatorUpListener implements Listener {
         if ( player.isFlying() ) {
             return;
         }
-        if ( player.isSwimming() ) {
-            return;
-        }
+
         if ( player.getVelocity().getY() <= 0 ) {
             return;
         }
@@ -50,7 +49,7 @@ public class ElevatorUpListener implements Listener {
             return;
         }
 
-        Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, BlockFace.UP);
+        Block baseTo = plugin.getSystem().tryFindFloor(baseFrom, new Vector(0,1,0));
         if ( baseTo == null ) {
             return;
         }
@@ -64,7 +63,7 @@ public class ElevatorUpListener implements Listener {
         Location playerTo = plugin.getSystem().calculatePlayerTo(playerFrom, baseFrom, baseTo);
 
         player.teleport(playerTo);
-        player.playSound(playerTo, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-        player.getWorld().spawnParticle(Particle.TOTEM, playerTo, 50, 0.2, 0.2, 0.2, 0.5);
+        player.playSound(playerTo, Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
+        player.getWorld().spawnParticle(Particle.TOTEM, playerTo, 10, 0.2, 0.2, 0.2, 0.5);
     }
 }

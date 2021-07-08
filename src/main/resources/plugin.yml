@@ -4,7 +4,7 @@ main: net.azisaba.yukielevator.${project.name}
 description: ${project.description}
 website: ${project.url}
 author: YukiLeafX
-api-version: 1.13
+api-version: 1.12
 permissions:
   yukielevator.use:
     default: true

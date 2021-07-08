@@ -44,8 +44,7 @@ public class ElevatorSystem {
         return IntStream.range(1, height).allMatch(distance -> isSafe(baseFrom.getRelative(BlockFace.UP, distance)));
     }
 
-    public Block tryFindFloor(Block baseFrom, BlockFace face) {
-        Vector direction = face.getDirection();
+    public Block tryFindFloor(Block baseFrom, Vector direction) {
         Location loc = baseFrom.getLocation().setDirection(direction);
         int maxDistance = baseFrom.getWorld().getMaxHeight();
         BlockIterator it = new BlockIterator(loc, 0, maxDistance);
